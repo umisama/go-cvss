@@ -2,6 +2,7 @@ package cvss
 
 import (
 	"github.com/stretchr/testify/assert"
+	"math"
 	"testing"
 )
 
@@ -18,7 +19,7 @@ func TestAccessVector(t *testing.T) {
 		{AccessVector_Local, true, 0.395, "Local", "L"},
 		{AccessVector_AdjacentNetwork, true, 0.646, "Adjacent Network", "A"},
 		{AccessVector_Network, true, 1.0, "Network", "N"},
-		{AccessVector("test"), false, 0.0, "", ""},
+		{AccessVector("test"), false, math.NaN(), "", ""},
 	}
 
 	for i, c := range cases {
@@ -42,7 +43,7 @@ func TestAccessComplexity(t *testing.T) {
 		{AccessComplexity_High, true, 0.35, "High", "H"},
 		{AccessComplexity_Midium, true, 0.61, "Midium", "M"},
 		{AccessComplexity_Low, true, 0.71, "Low", "L"},
-		{AccessComplexity("test"), false, 0.0, "", ""},
+		{AccessComplexity("test"), false, math.NaN(), "", ""},
 	}
 
 	for i, c := range cases {
@@ -66,7 +67,7 @@ func TestAuthentication(t *testing.T) {
 		{Authentication_Multiple, true, 0.45, "Multiple", "M"},
 		{Authentication_Single, true, 0.56, "Single", "S"},
 		{Authentication_None, true, 0.704, "None", "N"},
-		{Authentication("test"), false, 0.0, "", ""},
+		{Authentication("test"), false, math.NaN(), "", ""},
 	}
 
 	for i, c := range cases {
@@ -90,7 +91,7 @@ func TestConfidentiality(t *testing.T) {
 		{ImpactMetric_Complete, true, 0.660, "Complete", "C"},
 		{ImpactMetric_Partial, true, 0.275, "Partial", "P"},
 		{ImpactMetric_None, true, 0.0, "None", "N"},
-		{ImpactMetric("test"), false, 0.0, "", ""},
+		{ImpactMetric("test"), false, math.NaN(), "", ""},
 	}
 
 	for i, c := range cases {
@@ -155,7 +156,7 @@ func TestBaseMetricsBaseScore(t *testing.T) {
 			C:  ImpactMetric_None,
 			I:  ImpactMetric_Complete,
 			A:  ImpactMetric_Complete,
-		}, 0.0},
+		}, math.NaN()},
 	}
 
 	for i, c := range cases {

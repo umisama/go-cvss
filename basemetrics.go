@@ -56,7 +56,7 @@ func (m AccessVector) Score() float64 {
 		return 1.0
 	}
 
-	return 0.0
+	return math.NaN()
 }
 
 func (m AccessVector) String() string {
@@ -97,7 +97,7 @@ func (m AccessComplexity) Score() float64 {
 		return 0.71
 	}
 
-	return 0.0
+	return math.NaN()
 }
 
 func (m AccessComplexity) String() string {
@@ -138,7 +138,7 @@ func (m Authentication) Score() float64 {
 		return 0.704
 	}
 
-	return 0.0
+	return math.NaN()
 }
 
 func (m Authentication) String() string {
@@ -179,7 +179,7 @@ func (m ImpactMetric) Score() float64 {
 		return 0.0
 	}
 
-	return 0.0
+	return math.NaN()
 }
 
 func (m ImpactMetric) String() string {
@@ -206,7 +206,7 @@ func (m ImpactMetric) StringShort() string {
 
 func (m BaseMetrics) BaseScore() float64 {
 	if !m.IsValid() {
-		return 0.0
+		return math.NaN()
 	}
 
 	easyly_score := 20 * m.Av.Score() * m.Ac.Score() * m.Au.Score()
