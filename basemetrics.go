@@ -1,7 +1,9 @@
 package cvss
 
 import (
+	"fmt"
 	"math"
+	"regexp"
 )
 
 type BaseMetrics struct {
@@ -204,6 +206,27 @@ func (m ImpactMetric) StringShort() string {
 	return ""
 }
 
+func ParseBaseMetrics(str string) (BaseMetrics, error) {
+	submatches := regexp.MustCompile(`\(AV:([LAN])\/AC:([HML])\/Au:([NSM])\/C:([NPC])\/I:([NPC])\/A:([NPC])\)`).FindStringSubmatch(str)
+	if len(submatches) != 7 || submatches[0] != str {
+		return BaseMetrics{}, fmt.Errorf("invalid base vector string: %s", str)
+	}
+
+	m := BaseMetrics{
+		Av: AccessVector(submatches[1]),
+		Ac: AccessComplexity(submatches[2]),
+		Au: Authentication(submatches[3]),
+		C: ImpactMetric(submatches[4]),
+		I: ImpactMetric(submatches[5]),
+		A: ImpactMetric(submatches[6]),
+	}
+	if !m.IsValid() {
+		return BaseMetrics{}, fmt.Errorf("invalid base vector string: %s", str)
+	}
+
+	return m, nil
+}
+
 func (m BaseMetrics) BaseScore() float64 {
 	if !m.IsValid() {
 		return math.NaN()
@@ -222,6 +245,14 @@ func (m BaseMetrics) BaseScore() float64 {
 
 func (m BaseMetrics) IsValid() bool {
 	return m.A.IsValid() && m.Ac.IsValid() && m.Au.IsValid() && m.Av.IsValid() && m.C.IsValid() && m.I.IsValid()
+}
+
+func (m BaseMetrics) String() string {
+	if !m.IsValid() {
+		return ""
+	}
+
+	return "strings"
 }
 
 func round(val float64) float64 {

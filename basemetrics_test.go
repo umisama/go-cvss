@@ -163,3 +163,44 @@ func TestBaseMetricsBaseScore(t *testing.T) {
 		assert.Equal(t, c.score, c.trg.BaseScore(), "fail on %d", i)
 	}
 }
+
+func TestParseBaseMetrics(t *testing.T) {
+	type testcase struct {
+		input   string
+		output  BaseMetrics
+		iserror bool
+	}
+	cases := []testcase{
+		{"(AV:L/AC:H/Au:N/C:N/I:P/A:C)", BaseMetrics{
+			Av: AccessVector_Local,
+			Ac: AccessComplexity_High,
+			Au: Authentication_None,
+			C: ImpactMetric_None,
+			I: ImpactMetric_Partial,
+			A: ImpactMetric_Complete,
+		}, false},
+		{"(AV:L/AC:H/Au:N/C:N/I:P/A:C)", BaseMetrics{
+			Av: AccessVector_Local,
+			Ac: AccessComplexity_High,
+			Au: Authentication_None,
+			C: ImpactMetric_None,
+			I: ImpactMetric_Partial,
+			A: ImpactMetric_Complete,
+		}, false},
+		{"AV:L/AC:H/Au:N/C:N/I:P/A:C", BaseMetrics{}, true},
+		{"123(AV:L/AC:H/Au:N/C:N/I:P/A:C)", BaseMetrics{}, true},
+	}
+
+	for i, c := range cases {
+		m, err := ParseBaseMetrics(c.input)
+		if c.iserror {
+			assert.Error(t, err, "%d", i)
+			continue
+		} else {
+			assert.Nil(t, err, "%d", i)
+			assert.Equal(t, c.output, m, "%d", i)
+		}
+	}
+
+	return
+}
