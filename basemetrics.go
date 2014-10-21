@@ -7,8 +7,8 @@ import (
 )
 
 type BaseVectors struct {
-	Av AccessVector
-	Ac AccessComplexity
+	AV AccessVector
+	AC AccessComplexity
 	Au Authentication
 	C  Impact
 	I  Impact
@@ -213,8 +213,8 @@ func ParseBaseVectors(str string) (BaseVectors, error) {
 	}
 
 	m := BaseVectors{
-		Av: AccessVector(submatches[1]),
-		Ac: AccessComplexity(submatches[2]),
+		AV: AccessVector(submatches[1]),
+		AC: AccessComplexity(submatches[2]),
 		Au: Authentication(submatches[3]),
 		C: Impact(submatches[4]),
 		I: Impact(submatches[5]),
@@ -232,7 +232,7 @@ func (m BaseVectors) BaseScore() float64 {
 		return math.NaN()
 	}
 
-	easyly_score := 20 * m.Av.Score() * m.Ac.Score() * m.Au.Score()
+	easyly_score := 20 * m.AV.Score() * m.AC.Score() * m.Au.Score()
 	effective_score := 10.41 * (1 - (1-m.C.Score())*(1-m.I.Score())*(1-m.A.Score()))
 	effective_score_sub := 0.0
 	if effective_score != 0 {
@@ -244,13 +244,17 @@ func (m BaseVectors) BaseScore() float64 {
 }
 
 func (m BaseVectors) IsValid() bool {
-	return m.A.IsValid() && m.Ac.IsValid() && m.Au.IsValid() && m.Av.IsValid() && m.C.IsValid() && m.I.IsValid()
+	return m.A.IsValid() && m.AC.IsValid() && m.Au.IsValid() && m.AV.IsValid() && m.C.IsValid() && m.I.IsValid()
 }
 
 func (m BaseVectors) String() string {
 	if !m.IsValid() {
 		return ""
 	}
+
+
+
+
 
 	return "strings"
 }
