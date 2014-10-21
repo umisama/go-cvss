@@ -102,14 +102,14 @@ func TestConfidentiality(t *testing.T) {
 	}
 }
 
-func TestBaseMetricsBaseScore(t *testing.T) {
+func TestBaseVectorsBaseScore(t *testing.T) {
 	type testcase struct {
-		trg   BaseMetrics
+		trg   BaseVectors
 		score float64
 	}
 
 	var cases = []testcase{
-		{BaseMetrics{
+		{BaseVectors{
 			Av: AccessVector_Network,
 			Ac: AccessComplexity_Midium,
 			Au: Authentication_None,
@@ -117,7 +117,7 @@ func TestBaseMetricsBaseScore(t *testing.T) {
 			I:  ImpactMetric_Partial,
 			A:  ImpactMetric_None,
 		}, 4.3},
-		{BaseMetrics{
+		{BaseVectors{
 			Av: AccessVector_Network,
 			Ac: AccessComplexity_Low,
 			Au: Authentication_None,
@@ -125,7 +125,7 @@ func TestBaseMetricsBaseScore(t *testing.T) {
 			I:  ImpactMetric_Partial,
 			A:  ImpactMetric_Partial,
 		}, 7.5},
-		{BaseMetrics{
+		{BaseVectors{
 			Av: AccessVector_Network,
 			Ac: AccessComplexity_Midium,
 			Au: Authentication_Single,
@@ -133,7 +133,7 @@ func TestBaseMetricsBaseScore(t *testing.T) {
 			I:  ImpactMetric_Partial,
 			A:  ImpactMetric_None,
 		}, 3.5},
-		{BaseMetrics{
+		{BaseVectors{
 			Av: AccessVector_Local,
 			Ac: AccessComplexity_Midium,
 			Au: Authentication_None,
@@ -141,7 +141,7 @@ func TestBaseMetricsBaseScore(t *testing.T) {
 			I:  ImpactMetric_Complete,
 			A:  ImpactMetric_Complete,
 		}, 6.3},
-		{BaseMetrics{
+		{BaseVectors{
 			Av: AccessVector_Local,
 			Ac: AccessComplexity_Midium,
 			Au: Authentication_None,
@@ -149,7 +149,7 @@ func TestBaseMetricsBaseScore(t *testing.T) {
 			I:  ImpactMetric_Complete,
 			A:  ImpactMetric_Complete,
 		}, 6.3},
-		{BaseMetrics{
+		{BaseVectors{
 			Av: AccessVector("invalid"),
 			Ac: AccessComplexity_Midium,
 			Au: Authentication_None,
@@ -164,14 +164,14 @@ func TestBaseMetricsBaseScore(t *testing.T) {
 	}
 }
 
-func TestParseBaseMetrics(t *testing.T) {
+func TestParseBaseVectors(t *testing.T) {
 	type testcase struct {
 		input   string
-		output  BaseMetrics
+		output  BaseVectors
 		iserror bool
 	}
 	cases := []testcase{
-		{"(AV:L/AC:H/Au:N/C:N/I:P/A:C)", BaseMetrics{
+		{"(AV:L/AC:H/Au:N/C:N/I:P/A:C)", BaseVectors{
 			Av: AccessVector_Local,
 			Ac: AccessComplexity_High,
 			Au: Authentication_None,
@@ -179,7 +179,7 @@ func TestParseBaseMetrics(t *testing.T) {
 			I: ImpactMetric_Partial,
 			A: ImpactMetric_Complete,
 		}, false},
-		{"(AV:L/AC:H/Au:N/C:N/I:P/A:C)", BaseMetrics{
+		{"(AV:L/AC:H/Au:N/C:N/I:P/A:C)", BaseVectors{
 			Av: AccessVector_Local,
 			Ac: AccessComplexity_High,
 			Au: Authentication_None,
@@ -187,12 +187,12 @@ func TestParseBaseMetrics(t *testing.T) {
 			I: ImpactMetric_Partial,
 			A: ImpactMetric_Complete,
 		}, false},
-		{"AV:L/AC:H/Au:N/C:N/I:P/A:C", BaseMetrics{}, true},
-		{"123(AV:L/AC:H/Au:N/C:N/I:P/A:C)", BaseMetrics{}, true},
+		{"AV:L/AC:H/Au:N/C:N/I:P/A:C", BaseVectors{}, true},
+		{"123(AV:L/AC:H/Au:N/C:N/I:P/A:C)", BaseVectors{}, true},
 	}
 
 	for i, c := range cases {
-		m, err := ParseBaseMetrics(c.input)
+		m, err := ParseBaseVectors(c.input)
 		if c.iserror {
 			assert.Error(t, err, "%d", i)
 			continue

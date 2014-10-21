@@ -6,7 +6,7 @@ import (
 	"regexp"
 )
 
-type BaseMetrics struct {
+type BaseVectors struct {
 	Av AccessVector
 	Ac AccessComplexity
 	Au Authentication
@@ -206,13 +206,13 @@ func (m ImpactMetric) StringShort() string {
 	return ""
 }
 
-func ParseBaseMetrics(str string) (BaseMetrics, error) {
+func ParseBaseVectors(str string) (BaseVectors, error) {
 	submatches := regexp.MustCompile(`\(AV:([LAN])\/AC:([HML])\/Au:([NSM])\/C:([NPC])\/I:([NPC])\/A:([NPC])\)`).FindStringSubmatch(str)
 	if len(submatches) != 7 || submatches[0] != str {
-		return BaseMetrics{}, fmt.Errorf("invalid base vector string: %s", str)
+		return BaseVectors{}, fmt.Errorf("invalid base vectors string: %s", str)
 	}
 
-	m := BaseMetrics{
+	m := BaseVectors{
 		Av: AccessVector(submatches[1]),
 		Ac: AccessComplexity(submatches[2]),
 		Au: Authentication(submatches[3]),
@@ -221,13 +221,13 @@ func ParseBaseMetrics(str string) (BaseMetrics, error) {
 		A: ImpactMetric(submatches[6]),
 	}
 	if !m.IsValid() {
-		return BaseMetrics{}, fmt.Errorf("invalid base vector string: %s", str)
+		return BaseVectors{}, fmt.Errorf("invalid base vectors string: %s", str)
 	}
 
 	return m, nil
 }
 
-func (m BaseMetrics) BaseScore() float64 {
+func (m BaseVectors) BaseScore() float64 {
 	if !m.IsValid() {
 		return math.NaN()
 	}
@@ -243,11 +243,11 @@ func (m BaseMetrics) BaseScore() float64 {
 	return round(base_score)
 }
 
-func (m BaseMetrics) IsValid() bool {
+func (m BaseVectors) IsValid() bool {
 	return m.A.IsValid() && m.Ac.IsValid() && m.Au.IsValid() && m.Av.IsValid() && m.C.IsValid() && m.I.IsValid()
 }
 
-func (m BaseMetrics) String() string {
+func (m BaseVectors) String() string {
 	if !m.IsValid() {
 		return ""
 	}
