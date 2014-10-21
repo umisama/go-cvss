@@ -252,11 +252,8 @@ func (m BaseVectors) String() string {
 		return ""
 	}
 
-
-
-
-
-	return "strings"
+	return "(AV:"+m.AV.StringShort()+"/AC:"+m.AC.StringShort()+"/Au:"+m.Au.StringShort()+
+				"/C:"+m.C.StringShort()+"/I:"+m.I.StringShort()+"/A:"+m.A.StringShort()+")"
 }
 
 func round(val float64) float64 {
