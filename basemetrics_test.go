@@ -80,7 +80,7 @@ func TestAuthentication(t *testing.T) {
 
 func TestConfidentiality(t *testing.T) {
 	type testcase struct {
-		trg   ImpactMetric
+		trg   Impact
 		valid bool
 		score float64
 		str   string
@@ -88,10 +88,10 @@ func TestConfidentiality(t *testing.T) {
 	}
 
 	var cases = []testcase{
-		{ImpactMetric_Complete, true, 0.660, "Complete", "C"},
-		{ImpactMetric_Partial, true, 0.275, "Partial", "P"},
-		{ImpactMetric_None, true, 0.0, "None", "N"},
-		{ImpactMetric("test"), false, math.NaN(), "", ""},
+		{Impact_Complete, true, 0.660, "Complete", "C"},
+		{Impact_Partial, true, 0.275, "Partial", "P"},
+		{Impact_None, true, 0.0, "None", "N"},
+		{Impact("test"), false, math.NaN(), "", ""},
 	}
 
 	for i, c := range cases {
@@ -113,49 +113,49 @@ func TestBaseVectorsBaseScore(t *testing.T) {
 			Av: AccessVector_Network,
 			Ac: AccessComplexity_Midium,
 			Au: Authentication_None,
-			C:  ImpactMetric_None,
-			I:  ImpactMetric_Partial,
-			A:  ImpactMetric_None,
+			C:  Impact_None,
+			I:  Impact_Partial,
+			A:  Impact_None,
 		}, 4.3},
 		{BaseVectors{
 			Av: AccessVector_Network,
 			Ac: AccessComplexity_Low,
 			Au: Authentication_None,
-			C:  ImpactMetric_Partial,
-			I:  ImpactMetric_Partial,
-			A:  ImpactMetric_Partial,
+			C:  Impact_Partial,
+			I:  Impact_Partial,
+			A:  Impact_Partial,
 		}, 7.5},
 		{BaseVectors{
 			Av: AccessVector_Network,
 			Ac: AccessComplexity_Midium,
 			Au: Authentication_Single,
-			C:  ImpactMetric_None,
-			I:  ImpactMetric_Partial,
-			A:  ImpactMetric_None,
+			C:  Impact_None,
+			I:  Impact_Partial,
+			A:  Impact_None,
 		}, 3.5},
 		{BaseVectors{
 			Av: AccessVector_Local,
 			Ac: AccessComplexity_Midium,
 			Au: Authentication_None,
-			C:  ImpactMetric_None,
-			I:  ImpactMetric_Complete,
-			A:  ImpactMetric_Complete,
+			C:  Impact_None,
+			I:  Impact_Complete,
+			A:  Impact_Complete,
 		}, 6.3},
 		{BaseVectors{
 			Av: AccessVector_Local,
 			Ac: AccessComplexity_Midium,
 			Au: Authentication_None,
-			C:  ImpactMetric_None,
-			I:  ImpactMetric_Complete,
-			A:  ImpactMetric_Complete,
+			C:  Impact_None,
+			I:  Impact_Complete,
+			A:  Impact_Complete,
 		}, 6.3},
 		{BaseVectors{
 			Av: AccessVector("invalid"),
 			Ac: AccessComplexity_Midium,
 			Au: Authentication_None,
-			C:  ImpactMetric_None,
-			I:  ImpactMetric_Complete,
-			A:  ImpactMetric_Complete,
+			C:  Impact_None,
+			I:  Impact_Complete,
+			A:  Impact_Complete,
 		}, math.NaN()},
 	}
 
@@ -175,17 +175,17 @@ func TestParseBaseVectors(t *testing.T) {
 			Av: AccessVector_Local,
 			Ac: AccessComplexity_High,
 			Au: Authentication_None,
-			C: ImpactMetric_None,
-			I: ImpactMetric_Partial,
-			A: ImpactMetric_Complete,
+			C: Impact_None,
+			I: Impact_Partial,
+			A: Impact_Complete,
 		}, false},
 		{"(AV:L/AC:H/Au:N/C:N/I:P/A:C)", BaseVectors{
 			Av: AccessVector_Local,
 			Ac: AccessComplexity_High,
 			Au: Authentication_None,
-			C: ImpactMetric_None,
-			I: ImpactMetric_Partial,
-			A: ImpactMetric_Complete,
+			C: Impact_None,
+			I: Impact_Partial,
+			A: Impact_Complete,
 		}, false},
 		{"AV:L/AC:H/Au:N/C:N/I:P/A:C", BaseVectors{}, true},
 		{"123(AV:L/AC:H/Au:N/C:N/I:P/A:C)", BaseVectors{}, true},

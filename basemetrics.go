@@ -10,9 +10,9 @@ type BaseVectors struct {
 	Av AccessVector
 	Ac AccessComplexity
 	Au Authentication
-	C  ImpactMetric
-	I  ImpactMetric
-	A  ImpactMetric
+	C  Impact
+	I  Impact
+	A  Impact
 }
 
 type MetricsFactor interface {
@@ -25,7 +25,7 @@ type MetricsFactor interface {
 type AccessVector string
 type AccessComplexity string
 type Authentication string
-type ImpactMetric string
+type Impact string
 
 const (
 	AccessVector_Local           = AccessVector("L")
@@ -37,9 +37,9 @@ const (
 	Authentication_Multiple      = Authentication("M")
 	Authentication_Single        = Authentication("S")
 	Authentication_None          = Authentication("N")
-	ImpactMetric_Complete        = ImpactMetric("C")
-	ImpactMetric_Partial         = ImpactMetric("P")
-	ImpactMetric_None            = ImpactMetric("N")
+	Impact_Complete        = Impact("C")
+	Impact_Partial         = Impact("P")
+	Impact_None            = Impact("N")
 )
 
 func (m AccessVector) IsValid() bool {
@@ -165,41 +165,41 @@ func (m Authentication) StringShort() string {
 	return ""
 }
 
-func (m ImpactMetric) IsValid() bool {
-	return m == ImpactMetric_Complete ||
-		m == ImpactMetric_Partial ||
-		m == ImpactMetric_None
+func (m Impact) IsValid() bool {
+	return m == Impact_Complete ||
+		m == Impact_Partial ||
+		m == Impact_None
 }
 
-func (m ImpactMetric) Score() float64 {
+func (m Impact) Score() float64 {
 	switch m {
-	case ImpactMetric_Complete:
+	case Impact_Complete:
 		return 0.660
-	case ImpactMetric_Partial:
+	case Impact_Partial:
 		return 0.275
-	case ImpactMetric_None:
+	case Impact_None:
 		return 0.0
 	}
 
 	return math.NaN()
 }
 
-func (m ImpactMetric) String() string {
+func (m Impact) String() string {
 	switch m {
-	case ImpactMetric_Complete:
+	case Impact_Complete:
 		return "Complete"
-	case ImpactMetric_Partial:
+	case Impact_Partial:
 		return "Partial"
-	case ImpactMetric_None:
+	case Impact_None:
 		return "None"
 	}
 
 	return ""
 }
 
-func (m ImpactMetric) StringShort() string {
+func (m Impact) StringShort() string {
 	switch m {
-	case ImpactMetric_Complete, ImpactMetric_Partial, ImpactMetric_None:
+	case Impact_Complete, Impact_Partial, Impact_None:
 		return string(m)
 	}
 
@@ -216,9 +216,9 @@ func ParseBaseVectors(str string) (BaseVectors, error) {
 		Av: AccessVector(submatches[1]),
 		Ac: AccessComplexity(submatches[2]),
 		Au: Authentication(submatches[3]),
-		C: ImpactMetric(submatches[4]),
-		I: ImpactMetric(submatches[5]),
-		A: ImpactMetric(submatches[6]),
+		C: Impact(submatches[4]),
+		I: Impact(submatches[5]),
+		A: Impact(submatches[6]),
 	}
 	if !m.IsValid() {
 		return BaseVectors{}, fmt.Errorf("invalid base vectors string: %s", str)
