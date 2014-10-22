@@ -45,7 +45,7 @@ func ParseVectors(str string) (Vectors, error) {
 		IR:  Requirement(submatches[13]),
 		AR:  Requirement(submatches[14]),
 	}
-	if !m.IsValid() {
+	if !m.isValid() {
 		return Vectors{}, fmt.Errorf("invalid vectors string: %s", str)
 	}
 
@@ -57,7 +57,7 @@ func (m Vectors) BaseScore() float64 {
 }
 
 func (m Vectors) baseScore(impact float64) float64 {
-	if !m.IsValid() {
+	if !m.isValid() {
 		return math.NaN()
 	}
 
@@ -72,7 +72,7 @@ func (m Vectors) ImpactSubScore() float64 {
 }
 
 func (m Vectors) impact() float64 {
-	return 10.41 * (1 - (1-m.C.Score())*(1-m.I.Score())*(1-m.A.Score()))
+	return 10.41 * (1 - (1-m.C.score())*(1-m.I.score())*(1-m.A.score()))
 }
 
 func (m Vectors) ExploitabilitySubScore() float64 {
@@ -80,7 +80,7 @@ func (m Vectors) ExploitabilitySubScore() float64 {
 }
 
 func (m Vectors) exploitability() float64 {
-	return 20 * m.AV.Score() * m.AC.Score() * m.Au.Score()
+	return 20 * m.AV.score() * m.AC.score() * m.Au.score()
 }
 
 func (m Vectors) TemporalScore() float64 {
@@ -92,7 +92,7 @@ func (m Vectors) temporalScore(base float64) float64 {
 		return math.NaN()
 	}
 
-	return round(base * m.E.Score() * m.RL.Score() * m.RC.Score())
+	return round(base * m.E.score() * m.RL.score() * m.RC.score())
 }
 
 func (m Vectors) EnvironmentalScore() float64 {
@@ -107,7 +107,7 @@ func (m Vectors) environmentalScore() float64 {
 	aimpact := m.adjustedImpactSubScore()
 	atemporal := m.temporalScore(m.baseScore(aimpact))
 
-	return (atemporal + (10-atemporal)*m.CDP.Score()) * m.TD.Score()
+	return (atemporal + (10-atemporal)*m.CDP.score()) * m.TD.score()
 }
 
 func (m Vectors) AdjustedImpactSubScore() float64 {
@@ -119,7 +119,7 @@ func (m Vectors) adjustedImpactSubScore() float64 {
 		return math.NaN()
 	}
 
-	score := 10.41 * (1 - (1-m.C.Score()*m.CR.Score())*(1-m.I.Score()*m.IR.Score())*(1-m.A.Score()*m.AR.Score()))
+	score := 10.41 * (1 - (1-m.C.score()*m.CR.score())*(1-m.I.score()*m.IR.score())*(1-m.A.score()*m.AR.score()))
 	if score > 10.00 {
 		return 10.00
 	}
@@ -139,35 +139,35 @@ func (m Vectors) Score() float64 {
 	return math.NaN()
 }
 
-func (m Vectors) IsValid() bool {
-	return m.A.IsValid() && m.AC.IsValid() && m.Au.IsValid() && m.AV.IsValid() &&
-		m.C.IsValid() && m.I.IsValid() && m.E.IsValid() && m.RL.IsValid() && m.RC.IsValid() &&
-		m.CDP.IsValid() && m.TD.IsValid() && m.CR.IsValid() && m.IR.IsValid() && m.AR.IsValid()
+func (m Vectors) isValid() bool {
+	return m.A.isValid() && m.AC.isValid() && m.Au.isValid() && m.AV.isValid() &&
+		m.C.isValid() && m.I.isValid() && m.E.isValid() && m.RL.isValid() && m.RC.isValid() &&
+		m.CDP.isValid() && m.TD.isValid() && m.CR.isValid() && m.IR.isValid() && m.AR.isValid()
 }
 
 func (m Vectors) HasEnvironmentalVectors() bool {
-	return m.CDP.IsDefined() || m.TD.IsDefined() || m.CR.IsDefined() ||
-		m.IR.IsDefined() || m.AR.IsDefined()
+	return m.CDP.isDefined() || m.TD.isDefined() || m.CR.isDefined() ||
+		m.IR.isDefined() || m.AR.isDefined()
 }
 
 func (m Vectors) HasTemporalVectors() bool {
-	return m.HasEnvironmentalVectors() || m.E.IsDefined() || m.RL.IsDefined() || m.RC.IsDefined()
+	return m.HasEnvironmentalVectors() || m.E.isDefined() || m.RL.isDefined() || m.RC.isDefined()
 }
 
 func (m Vectors) String() string {
-	if !m.IsValid() {
+	if !m.isValid() {
 		return ""
 	}
 
-	base := "AV:" + m.AV.StringShort() + "/AC:" + m.AC.StringShort() + "/Au:" + m.Au.StringShort() +
-		"/C:" + m.C.StringShort() + "/I:" + m.I.StringShort() + "/A:" + m.A.StringShort()
+	base := "AV:" + m.AV.stringShort() + "/AC:" + m.AC.stringShort() + "/Au:" + m.Au.stringShort() +
+		"/C:" + m.C.stringShort() + "/I:" + m.I.stringShort() + "/A:" + m.A.stringShort()
 	temporary := ""
 	environment := ""
 	if m.HasTemporalVectors() {
-		temporary = "/E:" + m.E.StringShort() + "/RL:" + m.RL.StringShort() + "/RC:" + m.RC.StringShort()
+		temporary = "/E:" + m.E.stringShort() + "/RL:" + m.RL.stringShort() + "/RC:" + m.RC.stringShort()
 	}
 	if m.HasEnvironmentalVectors() {
-		environment = "/CDP:" + m.CDP.StringShort() + "/TD:" + m.TD.StringShort() + "/CR:" + m.CR.StringShort() + "/IR:" + m.IR.StringShort() + "/AR:" + m.AR.StringShort()
+		environment = "/CDP:" + m.CDP.stringShort() + "/TD:" + m.TD.stringShort() + "/CR:" + m.CR.stringShort() + "/IR:" + m.IR.stringShort() + "/AR:" + m.AR.stringShort()
 	}
 
 	return "(" + base + temporary + environment + ")"

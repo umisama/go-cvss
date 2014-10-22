@@ -4,12 +4,12 @@ import (
 	"math"
 )
 
-type Metrics interface {
-	IsValid() bool
-	IsDefined() bool
-	Score() float64
-	String() string
-	StringShort() string
+type Metric interface {
+	isValid() bool
+	isDefined() bool
+	score() float64
+	string() string
+	stringShort() string
 }
 
 type AccessVector string
@@ -67,17 +67,17 @@ const (
 	Requirement_NotDefined               = Requirement("ND")
 )
 
-func (m AccessVector) IsValid() bool {
+func (m AccessVector) isValid() bool {
 	return m == AccessVector_Local ||
 		m == AccessVector_AdjacentNetwork ||
 		m == AccessVector_Network
 }
 
-func (m AccessVector) IsDefined() bool {
-	return m.IsValid()
+func (m AccessVector) isDefined() bool {
+	return m.isValid()
 }
 
-func (m AccessVector) Score() float64 {
+func (m AccessVector) score() float64 {
 	switch m {
 	case AccessVector_Local:
 		return 0.395
@@ -90,7 +90,7 @@ func (m AccessVector) Score() float64 {
 	return math.NaN()
 }
 
-func (m AccessVector) String() string {
+func (m AccessVector) string() string {
 	switch m {
 	case AccessVector_Local:
 		return "Local"
@@ -103,7 +103,7 @@ func (m AccessVector) String() string {
 	return ""
 }
 
-func (m AccessVector) StringShort() string {
+func (m AccessVector) stringShort() string {
 	switch m {
 	case AccessVector_Local, AccessVector_AdjacentNetwork, AccessVector_Network:
 		return string(m)
@@ -112,17 +112,17 @@ func (m AccessVector) StringShort() string {
 	return ""
 }
 
-func (m AccessComplexity) IsValid() bool {
+func (m AccessComplexity) isValid() bool {
 	return m == AccessComplexity_High ||
 		m == AccessComplexity_Medium ||
 		m == AccessComplexity_Low
 }
 
-func (m AccessComplexity) IsDefined() bool {
-	return m.IsValid()
+func (m AccessComplexity) isDefined() bool {
+	return m.isValid()
 }
 
-func (m AccessComplexity) Score() float64 {
+func (m AccessComplexity) score() float64 {
 	switch m {
 	case AccessComplexity_High:
 		return 0.35
@@ -135,7 +135,7 @@ func (m AccessComplexity) Score() float64 {
 	return math.NaN()
 }
 
-func (m AccessComplexity) String() string {
+func (m AccessComplexity) string() string {
 	switch m {
 	case AccessComplexity_High:
 		return "High"
@@ -148,7 +148,7 @@ func (m AccessComplexity) String() string {
 	return ""
 }
 
-func (m AccessComplexity) StringShort() string {
+func (m AccessComplexity) stringShort() string {
 	switch m {
 	case AccessComplexity_High, AccessComplexity_Medium, AccessComplexity_Low:
 		return string(m)
@@ -157,17 +157,17 @@ func (m AccessComplexity) StringShort() string {
 	return ""
 }
 
-func (m Authentication) IsValid() bool {
+func (m Authentication) isValid() bool {
 	return m == Authentication_Multiple ||
 		m == Authentication_Single ||
 		m == Authentication_None
 }
 
-func (m Authentication) IsDefined() bool {
-	return m.IsValid()
+func (m Authentication) isDefined() bool {
+	return m.isValid()
 }
 
-func (m Authentication) Score() float64 {
+func (m Authentication) score() float64 {
 	switch m {
 	case Authentication_Multiple:
 		return 0.45
@@ -180,7 +180,7 @@ func (m Authentication) Score() float64 {
 	return math.NaN()
 }
 
-func (m Authentication) String() string {
+func (m Authentication) string() string {
 	switch m {
 	case Authentication_Multiple:
 		return "Multiple"
@@ -193,7 +193,7 @@ func (m Authentication) String() string {
 	return ""
 }
 
-func (m Authentication) StringShort() string {
+func (m Authentication) stringShort() string {
 	switch m {
 	case Authentication_Multiple, Authentication_Single, Authentication_None:
 		return string(m)
@@ -202,17 +202,17 @@ func (m Authentication) StringShort() string {
 	return ""
 }
 
-func (m Impact) IsValid() bool {
+func (m Impact) isValid() bool {
 	return m == Impact_Complete ||
 		m == Impact_Partial ||
 		m == Impact_None
 }
 
-func (m Impact) IsDefined() bool {
-	return m.IsValid()
+func (m Impact) isDefined() bool {
+	return m.isValid()
 }
 
-func (m Impact) Score() float64 {
+func (m Impact) score() float64 {
 	switch m {
 	case Impact_Complete:
 		return 0.660
@@ -225,7 +225,7 @@ func (m Impact) Score() float64 {
 	return math.NaN()
 }
 
-func (m Impact) String() string {
+func (m Impact) string() string {
 	switch m {
 	case Impact_Complete:
 		return "Complete"
@@ -238,7 +238,7 @@ func (m Impact) String() string {
 	return ""
 }
 
-func (m Impact) StringShort() string {
+func (m Impact) stringShort() string {
 	switch m {
 	case Impact_Complete, Impact_Partial, Impact_None:
 		return string(m)
@@ -247,7 +247,7 @@ func (m Impact) StringShort() string {
 	return ""
 }
 
-func (m Exploitability) IsValid() bool {
+func (m Exploitability) isValid() bool {
 	return m == Exploitability_Unproven ||
 		m == Exploitability_ProofOfConcept ||
 		m == Exploitability_Functional ||
@@ -256,13 +256,13 @@ func (m Exploitability) IsValid() bool {
 		m == Exploitability("")
 }
 
-func (m Exploitability) IsDefined() bool {
-	return m.IsValid() &&
+func (m Exploitability) isDefined() bool {
+	return m.isValid() &&
 		m != Exploitability_NotDefined &&
 		m != Exploitability("")
 }
 
-func (m Exploitability) Score() float64 {
+func (m Exploitability) score() float64 {
 	switch m {
 	case Exploitability_Unproven:
 		return 0.85
@@ -279,7 +279,7 @@ func (m Exploitability) Score() float64 {
 	return math.NaN()
 }
 
-func (m Exploitability) String() string {
+func (m Exploitability) string() string {
 	switch m {
 	case Exploitability_Unproven:
 		return "Unproven"
@@ -296,7 +296,7 @@ func (m Exploitability) String() string {
 	return ""
 }
 
-func (m Exploitability) StringShort() string {
+func (m Exploitability) stringShort() string {
 	switch m {
 	case Exploitability_Unproven, Exploitability_ProofOfConcept, Exploitability_Functional, Exploitability_High, Exploitability_NotDefined:
 		return string(m)
@@ -307,7 +307,7 @@ func (m Exploitability) StringShort() string {
 	return ""
 }
 
-func (m RemediationLevel) IsValid() bool {
+func (m RemediationLevel) isValid() bool {
 	return m == RemediationLevel_OfficialFix ||
 		m == RemediationLevel_TemporaryFix ||
 		m == RemediationLevel_Workaround ||
@@ -316,13 +316,13 @@ func (m RemediationLevel) IsValid() bool {
 		m == RemediationLevel("")
 }
 
-func (m RemediationLevel) IsDefined() bool {
-	return m.IsValid() &&
+func (m RemediationLevel) isDefined() bool {
+	return m.isValid() &&
 		m != RemediationLevel_NotDefined &&
 		m != RemediationLevel("")
 }
 
-func (m RemediationLevel) Score() float64 {
+func (m RemediationLevel) score() float64 {
 	switch m {
 	case RemediationLevel_OfficialFix:
 		return 0.87
@@ -339,7 +339,7 @@ func (m RemediationLevel) Score() float64 {
 	return math.NaN()
 }
 
-func (m RemediationLevel) String() string {
+func (m RemediationLevel) string() string {
 	switch m {
 	case RemediationLevel_OfficialFix:
 		return "Official-fix"
@@ -356,7 +356,7 @@ func (m RemediationLevel) String() string {
 	return ""
 }
 
-func (m RemediationLevel) StringShort() string {
+func (m RemediationLevel) stringShort() string {
 	switch m {
 	case RemediationLevel_OfficialFix, RemediationLevel_TemporaryFix, RemediationLevel_Workaround, RemediationLevel_Unavailable, RemediationLevel_NotDefined:
 		return string(m)
@@ -367,7 +367,7 @@ func (m RemediationLevel) StringShort() string {
 	return ""
 }
 
-func (m ReportConfidence) IsValid() bool {
+func (m ReportConfidence) isValid() bool {
 	return m == ReportConfidence_Unconfirmed ||
 		m == ReportConfidence_Uncorroborated ||
 		m == ReportConfidence_Confirmed ||
@@ -375,13 +375,13 @@ func (m ReportConfidence) IsValid() bool {
 		m == ReportConfidence("")
 }
 
-func (m ReportConfidence) IsDefined() bool {
-	return m.IsValid() &&
+func (m ReportConfidence) isDefined() bool {
+	return m.isValid() &&
 		m != ReportConfidence_NotDefined &&
 		m != ReportConfidence("")
 }
 
-func (m ReportConfidence) Score() float64 {
+func (m ReportConfidence) score() float64 {
 	switch m {
 	case ReportConfidence_Unconfirmed:
 		return 0.90
@@ -396,7 +396,7 @@ func (m ReportConfidence) Score() float64 {
 	return math.NaN()
 }
 
-func (m ReportConfidence) String() string {
+func (m ReportConfidence) string() string {
 	switch m {
 	case ReportConfidence_Unconfirmed:
 		return "Unconfirmed"
@@ -411,7 +411,7 @@ func (m ReportConfidence) String() string {
 	return ""
 }
 
-func (m ReportConfidence) StringShort() string {
+func (m ReportConfidence) stringShort() string {
 	switch m {
 	case ReportConfidence_Confirmed, ReportConfidence_Unconfirmed, ReportConfidence_Uncorroborated, ReportConfidence_NotDefined:
 		return string(m)
@@ -422,7 +422,7 @@ func (m ReportConfidence) StringShort() string {
 	return ""
 }
 
-func (m CollateralDamagePotential) IsValid() bool {
+func (m CollateralDamagePotential) isValid() bool {
 	return m == CollateralDamagePotential_None ||
 		m == CollateralDamagePotential_Low ||
 		m == CollateralDamagePotential_LowMedium ||
@@ -433,13 +433,13 @@ func (m CollateralDamagePotential) IsValid() bool {
 
 }
 
-func (m CollateralDamagePotential) IsDefined() bool {
-	return m.IsValid() &&
+func (m CollateralDamagePotential) isDefined() bool {
+	return m.isValid() &&
 		m != CollateralDamagePotential_NotDefined &&
 		m != CollateralDamagePotential("")
 }
 
-func (m CollateralDamagePotential) Score() float64 {
+func (m CollateralDamagePotential) score() float64 {
 	switch m {
 	case CollateralDamagePotential_None:
 		return 0.00
@@ -458,7 +458,7 @@ func (m CollateralDamagePotential) Score() float64 {
 	return math.NaN()
 }
 
-func (m CollateralDamagePotential) String() string {
+func (m CollateralDamagePotential) string() string {
 	switch m {
 	case CollateralDamagePotential_None:
 		return "None"
@@ -477,7 +477,7 @@ func (m CollateralDamagePotential) String() string {
 	return ""
 }
 
-func (m CollateralDamagePotential) StringShort() string {
+func (m CollateralDamagePotential) stringShort() string {
 	switch m {
 	case CollateralDamagePotential_Low, CollateralDamagePotential_LowMedium, CollateralDamagePotential_MediumHigh, CollateralDamagePotential_High, CollateralDamagePotential_None, CollateralDamagePotential_NotDefined:
 		return string(m)
@@ -488,7 +488,7 @@ func (m CollateralDamagePotential) StringShort() string {
 	return ""
 }
 
-func (m TargetDistribution) IsValid() bool {
+func (m TargetDistribution) isValid() bool {
 	return m == TargetDistribution_None ||
 		m == TargetDistribution_Low ||
 		m == TargetDistribution_Medium ||
@@ -497,13 +497,13 @@ func (m TargetDistribution) IsValid() bool {
 		m == TargetDistribution("")
 }
 
-func (m TargetDistribution) IsDefined() bool {
-	return m.IsValid() &&
+func (m TargetDistribution) isDefined() bool {
+	return m.isValid() &&
 		m != TargetDistribution_NotDefined &&
 		m != TargetDistribution("")
 }
 
-func (m TargetDistribution) Score() float64 {
+func (m TargetDistribution) score() float64 {
 	switch m {
 	case TargetDistribution_None:
 		return 0.00
@@ -520,7 +520,7 @@ func (m TargetDistribution) Score() float64 {
 	return math.NaN()
 }
 
-func (m TargetDistribution) String() string {
+func (m TargetDistribution) string() string {
 	switch m {
 	case TargetDistribution_None:
 		return "None"
@@ -537,7 +537,7 @@ func (m TargetDistribution) String() string {
 	return ""
 }
 
-func (m TargetDistribution) StringShort() string {
+func (m TargetDistribution) stringShort() string {
 	switch m {
 	case TargetDistribution_Low, TargetDistribution_Medium, TargetDistribution_High, TargetDistribution_None, TargetDistribution_NotDefined:
 		return string(m)
@@ -548,7 +548,7 @@ func (m TargetDistribution) StringShort() string {
 	return ""
 }
 
-func (m Requirement) IsValid() bool {
+func (m Requirement) isValid() bool {
 	return m == Requirement_Low ||
 		m == Requirement_Medium ||
 		m == Requirement_High ||
@@ -556,13 +556,13 @@ func (m Requirement) IsValid() bool {
 		m == Requirement("")
 }
 
-func (m Requirement) IsDefined() bool {
-	return m.IsValid() &&
+func (m Requirement) isDefined() bool {
+	return m.isValid() &&
 		m != Requirement_NotDefined &&
 		m != Requirement("")
 }
 
-func (m Requirement) Score() float64 {
+func (m Requirement) score() float64 {
 	switch m {
 	case Requirement_Low:
 		return 0.50
@@ -577,7 +577,7 @@ func (m Requirement) Score() float64 {
 	return math.NaN()
 }
 
-func (m Requirement) String() string {
+func (m Requirement) string() string {
 	switch m {
 	case Requirement_Low:
 		return "Low"
@@ -592,7 +592,7 @@ func (m Requirement) String() string {
 	return ""
 }
 
-func (m Requirement) StringShort() string {
+func (m Requirement) stringShort() string {
 	switch m {
 	case Requirement_Low, Requirement_Medium, Requirement_High, Requirement_NotDefined:
 		return string(m)
