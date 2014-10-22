@@ -6,6 +6,7 @@ import (
 
 type MetricsFactor interface {
 	IsValid() bool
+	IsDefined() bool
 	Score() float64
 	String() string
 	StringShort() string
@@ -72,6 +73,10 @@ func (m AccessVector) IsValid() bool {
 		m == AccessVector_Network
 }
 
+func (m AccessVector) IsDefined() bool {
+	return m.IsValid()
+}
+
 func (m AccessVector) Score() float64 {
 	switch m {
 	case AccessVector_Local:
@@ -111,6 +116,10 @@ func (m AccessComplexity) IsValid() bool {
 	return m == AccessComplexity_High ||
 		m == AccessComplexity_Medium ||
 		m == AccessComplexity_Low
+}
+
+func (m AccessComplexity) IsDefined() bool {
+	return m.IsValid()
 }
 
 func (m AccessComplexity) Score() float64 {
@@ -154,6 +163,10 @@ func (m Authentication) IsValid() bool {
 		m == Authentication_None
 }
 
+func (m Authentication) IsDefined() bool {
+	return m.IsValid()
+}
+
 func (m Authentication) Score() float64 {
 	switch m {
 	case Authentication_Multiple:
@@ -195,6 +208,10 @@ func (m Impact) IsValid() bool {
 		m == Impact_None
 }
 
+func (m Impact) IsDefined() bool {
+	return m.IsValid()
+}
+
 func (m Impact) Score() float64 {
 	switch m {
 	case Impact_Complete:
@@ -234,7 +251,15 @@ func (m Exploitability) IsValid() bool {
 	return m == Exploitability_Unproven ||
 		m == Exploitability_ProofOfConcept ||
 		m == Exploitability_Functional ||
-		m == Exploitability_High
+		m == Exploitability_High ||
+		m == Exploitability_NotDefined ||
+		m == Exploitability("")
+}
+
+func (m Exploitability) IsDefined() bool {
+	return m.IsValid() &&
+		m != Exploitability_NotDefined &&
+		m != Exploitability("")
 }
 
 func (m Exploitability) Score() float64 {
@@ -286,7 +311,15 @@ func (m RemediationLevel) IsValid() bool {
 	return m == RemediationLevel_OfficialFix ||
 		m == RemediationLevel_TemporaryFix ||
 		m == RemediationLevel_Workaround ||
-		m == RemediationLevel_Unavailable
+		m == RemediationLevel_Unavailable ||
+		m == RemediationLevel_NotDefined ||
+		m == RemediationLevel("")
+}
+
+func (m RemediationLevel) IsDefined() bool {
+	return m.IsValid() &&
+		m != RemediationLevel_NotDefined &&
+		m != RemediationLevel("")
 }
 
 func (m RemediationLevel) Score() float64 {
@@ -337,7 +370,15 @@ func (m RemediationLevel) StringShort() string {
 func (m ReportConfidence) IsValid() bool {
 	return m == ReportConfidence_Unconfirmed ||
 		m == ReportConfidence_Uncorroborated ||
-		m == ReportConfidence_Confirmed
+		m == ReportConfidence_Confirmed ||
+		m == ReportConfidence_NotDefined ||
+		m == ReportConfidence("")
+}
+
+func (m ReportConfidence) IsDefined() bool {
+	return m.IsValid() &&
+		m != ReportConfidence_NotDefined &&
+		m != ReportConfidence("")
 }
 
 func (m ReportConfidence) Score() float64 {
@@ -386,8 +427,16 @@ func (m CollateralDamagePotential) IsValid() bool {
 		m == CollateralDamagePotential_Low ||
 		m == CollateralDamagePotential_LowMedium ||
 		m == CollateralDamagePotential_MediumHigh ||
-		m == CollateralDamagePotential_High
+		m == CollateralDamagePotential_High ||
+		m == CollateralDamagePotential_NotDefined ||
+		m == CollateralDamagePotential("")
 
+}
+
+func (m CollateralDamagePotential) IsDefined() bool {
+	return m.IsValid() &&
+		m != CollateralDamagePotential_NotDefined &&
+		m != CollateralDamagePotential("")
 }
 
 func (m CollateralDamagePotential) Score() float64 {
@@ -443,7 +492,15 @@ func (m TargetDistribution) IsValid() bool {
 	return m == TargetDistribution_None ||
 		m == TargetDistribution_Low ||
 		m == TargetDistribution_Medium ||
-		m == TargetDistribution_High
+		m == TargetDistribution_High ||
+		m == TargetDistribution_NotDefined ||
+		m == TargetDistribution("")
+}
+
+func (m TargetDistribution) IsDefined() bool {
+	return m.IsValid() &&
+		m != TargetDistribution_NotDefined &&
+		m != TargetDistribution("")
 }
 
 func (m TargetDistribution) Score() float64 {
@@ -494,7 +551,15 @@ func (m TargetDistribution) StringShort() string {
 func (m Requirement) IsValid() bool {
 	return m == Requirement_Low ||
 		m == Requirement_Medium ||
-		m == Requirement_High
+		m == Requirement_High ||
+		m == Requirement_NotDefined ||
+		m == Requirement("")
+}
+
+func (m Requirement) IsDefined() bool {
+	return m.IsValid() &&
+		m != Requirement_NotDefined &&
+		m != Requirement("")
 }
 
 func (m Requirement) Score() float64 {

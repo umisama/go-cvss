@@ -85,7 +85,18 @@ func (m BaseVectors) exploitability() float64 {
 }
 
 func (m BaseVectors) IsValid() bool {
-	return m.A.IsValid() && m.AC.IsValid() && m.Au.IsValid() && m.AV.IsValid() && m.C.IsValid() && m.I.IsValid()
+	return m.A.IsValid() && m.AC.IsValid() && m.Au.IsValid() && m.AV.IsValid() &&
+		m.C.IsValid() && m.I.IsValid() && m.E.IsValid() && m.RL.IsValid() && m.RC.IsValid() &&
+		m.CDP.IsValid() && m.TD.IsValid() && m.CR.IsValid() && m.IR.IsValid() && m.AR.IsValid()
+}
+
+func (m BaseVectors) HasEnvironmentVectors() bool {
+	return m.CDP.IsDefined() || m.TD.IsDefined() || m.CR.IsDefined() ||
+		m.IR.IsDefined() || m.AR.IsDefined()
+}
+
+func (m BaseVectors) HasTemporalVectors() bool {
+	return m.HasEnvironmentVectors() || m.E.IsDefined() || m.RL.IsDefined() || m.RC.IsDefined()
 }
 
 func (m BaseVectors) String() string {
@@ -93,8 +104,18 @@ func (m BaseVectors) String() string {
 		return ""
 	}
 
-	return "(AV:" + m.AV.StringShort() + "/AC:" + m.AC.StringShort() + "/Au:" + m.Au.StringShort() +
-		"/C:" + m.C.StringShort() + "/I:" + m.I.StringShort() + "/A:" + m.A.StringShort() + ")"
+	base := "AV:" + m.AV.StringShort() + "/AC:" + m.AC.StringShort() + "/Au:" + m.Au.StringShort() +
+		"/C:" + m.C.StringShort() + "/I:" + m.I.StringShort() + "/A:" + m.A.StringShort()
+	temporary := ""
+	environment := ""
+	if m.HasTemporalVectors() {
+		temporary = "/E:" + m.E.StringShort() + "/RL:" + m.RL.StringShort() + "/RC:" + m.RC.StringShort()
+	}
+	if m.HasEnvironmentVectors() {
+		environment = "/CDP:" + m.CDP.StringShort() + "/TD:" + m.TD.StringShort() + "/CR:" + m.CR.StringShort() + "/IR:" + m.IR.StringShort() + "/AR:" + m.AR.StringShort()
+	}
+
+	return "(" + base + temporary + environment + ")"
 }
 
 func round(val float64) float64 {
