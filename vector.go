@@ -53,22 +53,21 @@ func ParseBaseVectors(str string) (BaseVectors, error) {
 }
 
 func (m BaseVectors) BaseScore() float64 {
-	return round(m.baseScore())
+	return m.baseScore(m.impact())
 }
 
-func (m BaseVectors) baseScore() float64 {
+func (m BaseVectors) baseScore(impact float64) float64 {
 	if !m.IsValid() {
 		return math.NaN()
 	}
 
-	impact := m.impact()
 	exploitability := m.exploitability()
 	impact_sub := iif(impact == 0.0, 0.0, 1.176)
 	base_score := ((0.6 * impact) + (0.4 * exploitability) - 1.5) * impact_sub
-	return base_score
+	return round(base_score)
 }
 
-func (m BaseVectors) Impact() float64 {
+func (m BaseVectors) ImpactSubScore() float64 {
 	return round(m.impact())
 }
 
@@ -76,12 +75,68 @@ func (m BaseVectors) impact() float64 {
 	return 10.41 * (1 - (1-m.C.Score())*(1-m.I.Score())*(1-m.A.Score()))
 }
 
-func (m BaseVectors) Exploitability() float64 {
+func (m BaseVectors) ExploitabilitySubScore() float64 {
 	return round(m.exploitability())
 }
 
 func (m BaseVectors) exploitability() float64 {
 	return 20 * m.AV.Score() * m.AC.Score() * m.Au.Score()
+}
+
+func (m BaseVectors) TemporalScore() float64 {
+	return m.temporalScore(m.baseScore(m.impact()))
+}
+
+func (m BaseVectors) temporalScore(base float64) float64 {
+	if !m.HasTemporalVectors() {
+		return math.NaN()
+	}
+
+	return round(base * m.E.Score() * m.RL.Score() * m.RC.Score())
+}
+
+func (m BaseVectors) EnvironmentalScore() float64 {
+	return round(m.environmentalScore())
+}
+
+func (m BaseVectors) environmentalScore() float64 {
+	if !m.HasEnvironmentalVectors() {
+		return math.NaN()
+	}
+
+	aimpact := m.adjustedImpactSubScore()
+	atemporal := m.temporalScore(m.baseScore(aimpact))
+
+	return (atemporal + (10-atemporal)*m.CDP.Score()) * m.TD.Score()
+}
+
+func (m BaseVectors) AdjustedImpactSubScore() float64 {
+	return round(m.adjustedImpactSubScore())
+}
+
+func (m BaseVectors) adjustedImpactSubScore() float64 {
+	if !m.HasEnvironmentalVectors() {
+		return math.NaN()
+	}
+
+	score := 10.41 * (1 - (1-m.C.Score()*m.CR.Score())*(1-m.I.Score()*m.IR.Score())*(1-m.A.Score()*m.AR.Score()))
+	if score > 10.00 {
+		return 10.00
+	}
+	return score
+}
+
+func (m BaseVectors) Score() float64 {
+	if !math.IsNaN(m.EnvironmentalScore()) {
+		return m.EnvironmentalScore()
+	}
+	if !math.IsNaN(m.TemporalScore()) {
+		return m.TemporalScore()
+	}
+	if !math.IsNaN(m.BaseScore()) {
+		return m.BaseScore()
+	}
+	return math.NaN()
 }
 
 func (m BaseVectors) IsValid() bool {
@@ -90,13 +145,13 @@ func (m BaseVectors) IsValid() bool {
 		m.CDP.IsValid() && m.TD.IsValid() && m.CR.IsValid() && m.IR.IsValid() && m.AR.IsValid()
 }
 
-func (m BaseVectors) HasEnvironmentVectors() bool {
+func (m BaseVectors) HasEnvironmentalVectors() bool {
 	return m.CDP.IsDefined() || m.TD.IsDefined() || m.CR.IsDefined() ||
 		m.IR.IsDefined() || m.AR.IsDefined()
 }
 
 func (m BaseVectors) HasTemporalVectors() bool {
-	return m.HasEnvironmentVectors() || m.E.IsDefined() || m.RL.IsDefined() || m.RC.IsDefined()
+	return m.HasEnvironmentalVectors() || m.E.IsDefined() || m.RL.IsDefined() || m.RC.IsDefined()
 }
 
 func (m BaseVectors) String() string {
@@ -111,7 +166,7 @@ func (m BaseVectors) String() string {
 	if m.HasTemporalVectors() {
 		temporary = "/E:" + m.E.StringShort() + "/RL:" + m.RL.StringShort() + "/RC:" + m.RC.StringShort()
 	}
-	if m.HasEnvironmentVectors() {
+	if m.HasEnvironmentalVectors() {
 		environment = "/CDP:" + m.CDP.StringShort() + "/TD:" + m.TD.StringShort() + "/CR:" + m.CR.StringShort() + "/IR:" + m.IR.StringShort() + "/AR:" + m.AR.StringShort()
 	}
 
