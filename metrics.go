@@ -4,7 +4,7 @@ import (
 	"math"
 )
 
-type MetricsFactor interface {
+type Metrics interface {
 	IsValid() bool
 	IsDefined() bool
 	Score() float64

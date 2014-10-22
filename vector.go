@@ -6,7 +6,7 @@ import (
 	"regexp"
 )
 
-type BaseVectors struct {
+type Vectors struct {
 	AV  AccessVector
 	AC  AccessComplexity
 	Au  Authentication
@@ -23,13 +23,13 @@ type BaseVectors struct {
 	AR  Requirement
 }
 
-func ParseBaseVectors(str string) (BaseVectors, error) {
+func ParseVectors(str string) (Vectors, error) {
 	submatches := regexp.MustCompile(`\(AV:([LAN])\/AC:([HML])\/Au:([NSM])\/C:([NPC])\/I:([NPC])\/A:([NPC])(?:\/E:(ND|U|POC|F|H)\/RL:(ND|OF|T|W|U)\/RC:(ND|UC|UR|C)(?:\/CDP:(N|L|LM|MH|H|ND)\/TD:(N|L|M|H|ND)\/CR:(L|M|H|ND)\/IR:(L|M|H|ND)\/AR:(L|M|H|ND))?)?\)`).FindStringSubmatch(str)
 	if len(submatches) != 15 || submatches[0] != str {
-		return BaseVectors{}, fmt.Errorf("invalid vectors string: %s", str)
+		return Vectors{}, fmt.Errorf("invalid vectors string: %s", str)
 	}
 
-	m := BaseVectors{
+	m := Vectors{
 		AV:  AccessVector(submatches[1]),
 		AC:  AccessComplexity(submatches[2]),
 		Au:  Authentication(submatches[3]),
@@ -46,17 +46,17 @@ func ParseBaseVectors(str string) (BaseVectors, error) {
 		AR:  Requirement(submatches[14]),
 	}
 	if !m.IsValid() {
-		return BaseVectors{}, fmt.Errorf("invalid vectors string: %s", str)
+		return Vectors{}, fmt.Errorf("invalid vectors string: %s", str)
 	}
 
 	return m, nil
 }
 
-func (m BaseVectors) BaseScore() float64 {
+func (m Vectors) BaseScore() float64 {
 	return m.baseScore(m.impact())
 }
 
-func (m BaseVectors) baseScore(impact float64) float64 {
+func (m Vectors) baseScore(impact float64) float64 {
 	if !m.IsValid() {
 		return math.NaN()
 	}
@@ -67,27 +67,27 @@ func (m BaseVectors) baseScore(impact float64) float64 {
 	return round(base_score)
 }
 
-func (m BaseVectors) ImpactSubScore() float64 {
+func (m Vectors) ImpactSubScore() float64 {
 	return round(m.impact())
 }
 
-func (m BaseVectors) impact() float64 {
+func (m Vectors) impact() float64 {
 	return 10.41 * (1 - (1-m.C.Score())*(1-m.I.Score())*(1-m.A.Score()))
 }
 
-func (m BaseVectors) ExploitabilitySubScore() float64 {
+func (m Vectors) ExploitabilitySubScore() float64 {
 	return round(m.exploitability())
 }
 
-func (m BaseVectors) exploitability() float64 {
+func (m Vectors) exploitability() float64 {
 	return 20 * m.AV.Score() * m.AC.Score() * m.Au.Score()
 }
 
-func (m BaseVectors) TemporalScore() float64 {
+func (m Vectors) TemporalScore() float64 {
 	return m.temporalScore(m.baseScore(m.impact()))
 }
 
-func (m BaseVectors) temporalScore(base float64) float64 {
+func (m Vectors) temporalScore(base float64) float64 {
 	if !m.HasTemporalVectors() {
 		return math.NaN()
 	}
@@ -95,11 +95,11 @@ func (m BaseVectors) temporalScore(base float64) float64 {
 	return round(base * m.E.Score() * m.RL.Score() * m.RC.Score())
 }
 
-func (m BaseVectors) EnvironmentalScore() float64 {
+func (m Vectors) EnvironmentalScore() float64 {
 	return round(m.environmentalScore())
 }
 
-func (m BaseVectors) environmentalScore() float64 {
+func (m Vectors) environmentalScore() float64 {
 	if !m.HasEnvironmentalVectors() {
 		return math.NaN()
 	}
@@ -110,11 +110,11 @@ func (m BaseVectors) environmentalScore() float64 {
 	return (atemporal + (10-atemporal)*m.CDP.Score()) * m.TD.Score()
 }
 
-func (m BaseVectors) AdjustedImpactSubScore() float64 {
+func (m Vectors) AdjustedImpactSubScore() float64 {
 	return round(m.adjustedImpactSubScore())
 }
 
-func (m BaseVectors) adjustedImpactSubScore() float64 {
+func (m Vectors) adjustedImpactSubScore() float64 {
 	if !m.HasEnvironmentalVectors() {
 		return math.NaN()
 	}
@@ -126,7 +126,7 @@ func (m BaseVectors) adjustedImpactSubScore() float64 {
 	return score
 }
 
-func (m BaseVectors) Score() float64 {
+func (m Vectors) Score() float64 {
 	if !math.IsNaN(m.EnvironmentalScore()) {
 		return m.EnvironmentalScore()
 	}
@@ -139,22 +139,22 @@ func (m BaseVectors) Score() float64 {
 	return math.NaN()
 }
 
-func (m BaseVectors) IsValid() bool {
+func (m Vectors) IsValid() bool {
 	return m.A.IsValid() && m.AC.IsValid() && m.Au.IsValid() && m.AV.IsValid() &&
 		m.C.IsValid() && m.I.IsValid() && m.E.IsValid() && m.RL.IsValid() && m.RC.IsValid() &&
 		m.CDP.IsValid() && m.TD.IsValid() && m.CR.IsValid() && m.IR.IsValid() && m.AR.IsValid()
 }
 
-func (m BaseVectors) HasEnvironmentalVectors() bool {
+func (m Vectors) HasEnvironmentalVectors() bool {
 	return m.CDP.IsDefined() || m.TD.IsDefined() || m.CR.IsDefined() ||
 		m.IR.IsDefined() || m.AR.IsDefined()
 }
 
-func (m BaseVectors) HasTemporalVectors() bool {
+func (m Vectors) HasTemporalVectors() bool {
 	return m.HasEnvironmentalVectors() || m.E.IsDefined() || m.RL.IsDefined() || m.RC.IsDefined()
 }
 
-func (m BaseVectors) String() string {
+func (m Vectors) String() string {
 	if !m.IsValid() {
 		return ""
 	}

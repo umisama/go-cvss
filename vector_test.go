@@ -6,14 +6,14 @@ import (
 	"testing"
 )
 
-func TestParseBaseVectors(t *testing.T) {
+func TestParseVectors(t *testing.T) {
 	type testcase struct {
 		input   string
-		output  BaseVectors
+		output  Vectors
 		iserror bool
 	}
 	cases := []testcase{
-		{"(AV:L/AC:H/Au:N/C:N/I:P/A:C)", BaseVectors{
+		{"(AV:L/AC:H/Au:N/C:N/I:P/A:C)", Vectors{
 			AV: AccessVector_Local,
 			AC: AccessComplexity_High,
 			Au: Authentication_None,
@@ -21,7 +21,7 @@ func TestParseBaseVectors(t *testing.T) {
 			I:  Impact_Partial,
 			A:  Impact_Complete,
 		}, false},
-		{"(AV:L/AC:H/Au:N/C:N/I:P/A:C)", BaseVectors{
+		{"(AV:L/AC:H/Au:N/C:N/I:P/A:C)", Vectors{
 			AV: AccessVector_Local,
 			AC: AccessComplexity_High,
 			Au: Authentication_None,
@@ -29,7 +29,7 @@ func TestParseBaseVectors(t *testing.T) {
 			I:  Impact_Partial,
 			A:  Impact_Complete,
 		}, false},
-		{"(AV:L/AC:H/Au:N/C:N/I:P/A:C/E:POC/RL:OF/RC:C)", BaseVectors{
+		{"(AV:L/AC:H/Au:N/C:N/I:P/A:C/E:POC/RL:OF/RC:C)", Vectors{
 			AV: AccessVector_Local,
 			AC: AccessComplexity_High,
 			Au: Authentication_None,
@@ -40,7 +40,7 @@ func TestParseBaseVectors(t *testing.T) {
 			RL: RemediationLevel_OfficialFix,
 			RC: ReportConfidence_Confirmed,
 		}, false},
-		{"(AV:L/AC:L/Au:M/C:C/I:N/A:P/E:F/RL:T/RC:UR)", BaseVectors{
+		{"(AV:L/AC:L/Au:M/C:C/I:N/A:P/E:F/RL:T/RC:UR)", Vectors{
 			AV: AccessVector_Local,
 			AC: AccessComplexity_Low,
 			Au: Authentication_Multiple,
@@ -51,7 +51,7 @@ func TestParseBaseVectors(t *testing.T) {
 			RL: RemediationLevel_TemporaryFix,
 			RC: ReportConfidence_Uncorroborated,
 		}, false},
-		{"(AV:L/AC:H/Au:N/C:N/I:P/A:C/E:POC/RL:OF/RC:C/CDP:L/TD:M/CR:L/IR:L/AR:H)", BaseVectors{
+		{"(AV:L/AC:H/Au:N/C:N/I:P/A:C/E:POC/RL:OF/RC:C/CDP:L/TD:M/CR:L/IR:L/AR:H)", Vectors{
 			AV:  AccessVector_Local,
 			AC:  AccessComplexity_High,
 			Au:  Authentication_None,
@@ -67,7 +67,7 @@ func TestParseBaseVectors(t *testing.T) {
 			IR:  Requirement_Low,
 			AR:  Requirement_High,
 		}, false},
-		{"(AV:L/AC:L/Au:M/C:C/I:N/A:P/E:F/RL:T/RC:UR/CDP:MH/TD:H/CR:M/IR:L/AR:M)", BaseVectors{
+		{"(AV:L/AC:L/Au:M/C:C/I:N/A:P/E:F/RL:T/RC:UR/CDP:MH/TD:H/CR:M/IR:L/AR:M)", Vectors{
 			AV:  AccessVector_Local,
 			AC:  AccessComplexity_Low,
 			Au:  Authentication_Multiple,
@@ -83,13 +83,13 @@ func TestParseBaseVectors(t *testing.T) {
 			IR:  Requirement_Low,
 			AR:  Requirement_Medium,
 		}, false},
-		{"AV:L/AC:H/Au:N/C:N/I:P/A:C", BaseVectors{}, true},
-		{"123(AV:L/AC:H/Au:N/C:N/I:P/A:C)", BaseVectors{}, true},
-		{"(AV:L/AC:H/Au:N/C:N/I:P/A:C/E:F)", BaseVectors{}, true},
+		{"AV:L/AC:H/Au:N/C:N/I:P/A:C", Vectors{}, true},
+		{"123(AV:L/AC:H/Au:N/C:N/I:P/A:C)", Vectors{}, true},
+		{"(AV:L/AC:H/Au:N/C:N/I:P/A:C/E:F)", Vectors{}, true},
 	}
 
 	for i, c := range cases {
-		m, err := ParseBaseVectors(c.input)
+		m, err := ParseVectors(c.input)
 		if c.iserror {
 			assert.Error(t, err, "%d", i)
 			continue
@@ -102,13 +102,13 @@ func TestParseBaseVectors(t *testing.T) {
 	return
 }
 
-func TestBaseVectorsString(t *testing.T) {
+func TestVectorsString(t *testing.T) {
 	type testcase struct {
-		input  BaseVectors
+		input  Vectors
 		expect string
 	}
 	cases := []testcase{
-		{BaseVectors{
+		{Vectors{
 			AV: AccessVector_Local,
 			AC: AccessComplexity_High,
 			Au: Authentication_None,
@@ -116,7 +116,7 @@ func TestBaseVectorsString(t *testing.T) {
 			I:  Impact_Partial,
 			A:  Impact_Complete,
 		}, "(AV:L/AC:H/Au:N/C:N/I:P/A:C)"},
-		{BaseVectors{
+		{Vectors{
 			AV: AccessVector_Local,
 			AC: AccessComplexity_High,
 			Au: Authentication_None,
@@ -124,7 +124,7 @@ func TestBaseVectorsString(t *testing.T) {
 			I:  Impact_Partial,
 			A:  Impact_Complete,
 		}, "(AV:L/AC:H/Au:N/C:N/I:P/A:C)"},
-		{BaseVectors{
+		{Vectors{
 			AV:  AccessVector_Local,
 			AC:  AccessComplexity_Low,
 			Au:  Authentication_Multiple,
@@ -140,7 +140,7 @@ func TestBaseVectorsString(t *testing.T) {
 			IR:  Requirement_Low,
 			AR:  Requirement_Medium,
 		}, "(AV:L/AC:L/Au:M/C:C/I:N/A:P/E:F/RL:T/RC:UR/CDP:MH/TD:H/CR:M/IR:L/AR:M)"},
-		{BaseVectors{}, ""}, // if invalid returns empty string
+		{Vectors{}, ""}, // if invalid returns empty string
 	}
 
 	for i, c := range cases {
@@ -148,9 +148,9 @@ func TestBaseVectorsString(t *testing.T) {
 	}
 }
 
-func TestBaseVectorsBaseScore(t *testing.T) {
+func TestVectorsScore(t *testing.T) {
 	type testcase struct {
-		trg        BaseVectors
+		trg        Vectors
 		base_score float64
 		tmp_score  float64
 		env_score  float64
@@ -158,7 +158,7 @@ func TestBaseVectorsBaseScore(t *testing.T) {
 	}
 
 	var cases = []testcase{
-		{BaseVectors{
+		{Vectors{
 			AV: AccessVector_Network,
 			AC: AccessComplexity_Medium,
 			Au: Authentication_None,
@@ -166,7 +166,7 @@ func TestBaseVectorsBaseScore(t *testing.T) {
 			I:  Impact_Partial,
 			A:  Impact_None,
 		}, 4.3, math.NaN(), math.NaN(), 4.3},
-		{BaseVectors{
+		{Vectors{
 			AV: AccessVector_Network,
 			AC: AccessComplexity_Low,
 			Au: Authentication_None,
@@ -174,7 +174,7 @@ func TestBaseVectorsBaseScore(t *testing.T) {
 			I:  Impact_Partial,
 			A:  Impact_Partial,
 		}, 7.5, math.NaN(), math.NaN(), 7.5},
-		{BaseVectors{
+		{Vectors{
 			AV: AccessVector_Network,
 			AC: AccessComplexity_Medium,
 			Au: Authentication_Single,
@@ -182,7 +182,7 @@ func TestBaseVectorsBaseScore(t *testing.T) {
 			I:  Impact_Partial,
 			A:  Impact_None,
 		}, 3.5, math.NaN(), math.NaN(), 3.5},
-		{BaseVectors{
+		{Vectors{
 			AV: AccessVector_Local,
 			AC: AccessComplexity_Medium,
 			Au: Authentication_None,
@@ -190,7 +190,7 @@ func TestBaseVectorsBaseScore(t *testing.T) {
 			I:  Impact_Complete,
 			A:  Impact_Complete,
 		}, 6.3, math.NaN(), math.NaN(), 6.3},
-		{BaseVectors{
+		{Vectors{
 			AV: AccessVector_Local,
 			AC: AccessComplexity_High,
 			Au: Authentication_None,
@@ -201,7 +201,7 @@ func TestBaseVectorsBaseScore(t *testing.T) {
 			RL: RemediationLevel_OfficialFix,
 			RC: ReportConfidence_Confirmed,
 		}, 4.7, 3.7, math.NaN(), 3.7},
-		{BaseVectors{
+		{Vectors{
 			AV: AccessVector_Local,
 			AC: AccessComplexity_Low,
 			Au: Authentication_Multiple,
@@ -212,7 +212,7 @@ func TestBaseVectorsBaseScore(t *testing.T) {
 			RL: RemediationLevel_TemporaryFix,
 			RC: ReportConfidence_Uncorroborated,
 		}, 5.0, 4.1, math.NaN(), 4.1},
-		{BaseVectors{
+		{Vectors{
 			AV:  AccessVector_Local,
 			AC:  AccessComplexity_Low,
 			Au:  Authentication_Multiple,
@@ -228,7 +228,7 @@ func TestBaseVectorsBaseScore(t *testing.T) {
 			IR:  Requirement_Low,
 			AR:  Requirement_Medium,
 		}, 5.0, 4.5, 6.7, 6.7},
-		{BaseVectors{
+		{Vectors{
 			AV:  AccessVector_Local,
 			AC:  AccessComplexity_High,
 			Au:  Authentication_None,
@@ -244,7 +244,7 @@ func TestBaseVectorsBaseScore(t *testing.T) {
 			IR:  Requirement_Low,
 			AR:  Requirement_High,
 		}, 4.7, 3.7, 4.1, 4.1},
-		{BaseVectors{
+		{Vectors{
 			AV: AccessVector("invalid"),
 			AC: AccessComplexity_Medium,
 			Au: Authentication_None,
