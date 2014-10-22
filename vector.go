@@ -24,40 +24,64 @@ type BaseVectors struct {
 }
 
 func ParseBaseVectors(str string) (BaseVectors, error) {
-	submatches := regexp.MustCompile(`\(AV:([LAN])\/AC:([HML])\/Au:([NSM])\/C:([NPC])\/I:([NPC])\/A:([NPC])\)`).FindStringSubmatch(str)
-	if len(submatches) != 7 || submatches[0] != str {
-		return BaseVectors{}, fmt.Errorf("invalid base vectors string: %s", str)
+	submatches := regexp.MustCompile(`\(AV:([LAN])\/AC:([HML])\/Au:([NSM])\/C:([NPC])\/I:([NPC])\/A:([NPC])(?:\/E:(ND|U|POC|F|H)\/RL:(ND|OF|T|W|U)\/RC:(ND|UC|UR|C)(?:\/CDP:(N|L|LM|MH|H|ND)\/TD:(N|L|M|H|ND)\/CR:(L|M|H|ND)\/IR:(L|M|H|ND)\/AR:(L|M|H|ND))?)?\)`).FindStringSubmatch(str)
+	if len(submatches) != 15 || submatches[0] != str {
+		return BaseVectors{}, fmt.Errorf("invalid vectors string: %s", str)
 	}
 
 	m := BaseVectors{
-		AV: AccessVector(submatches[1]),
-		AC: AccessComplexity(submatches[2]),
-		Au: Authentication(submatches[3]),
-		C:  Impact(submatches[4]),
-		I:  Impact(submatches[5]),
-		A:  Impact(submatches[6]),
+		AV:  AccessVector(submatches[1]),
+		AC:  AccessComplexity(submatches[2]),
+		Au:  Authentication(submatches[3]),
+		C:   Impact(submatches[4]),
+		I:   Impact(submatches[5]),
+		A:   Impact(submatches[6]),
+		E:   Exploitability(submatches[7]),
+		RL:  RemediationLevel(submatches[8]),
+		RC:  ReportConfidence(submatches[9]),
+		CDP: CollateralDamagePotential(submatches[10]),
+		TD:  TargetDistribution(submatches[11]),
+		CR:  Requirement(submatches[12]),
+		IR:  Requirement(submatches[13]),
+		AR:  Requirement(submatches[14]),
 	}
 	if !m.IsValid() {
-		return BaseVectors{}, fmt.Errorf("invalid base vectors string: %s", str)
+		return BaseVectors{}, fmt.Errorf("invalid vectors string: %s", str)
 	}
 
 	return m, nil
 }
 
 func (m BaseVectors) BaseScore() float64 {
+	return round(m.baseScore())
+}
+
+func (m BaseVectors) baseScore() float64 {
 	if !m.IsValid() {
 		return math.NaN()
 	}
 
-	easyly_score := 20 * m.AV.Score() * m.AC.Score() * m.Au.Score()
-	effective_score := 10.41 * (1 - (1-m.C.Score())*(1-m.I.Score())*(1-m.A.Score()))
-	effective_score_sub := 0.0
-	if effective_score != 0 {
-		effective_score_sub = 1.176
-	}
+	impact := m.impact()
+	exploitability := m.exploitability()
+	impact_sub := iif(impact == 0.0, 0.0, 1.176)
+	base_score := ((0.6 * impact) + (0.4 * exploitability) - 1.5) * impact_sub
+	return base_score
+}
 
-	base_score := ((0.6 * effective_score) + (0.4 * easyly_score) - 1.5) * effective_score_sub
-	return round(base_score)
+func (m BaseVectors) Impact() float64 {
+	return round(m.impact())
+}
+
+func (m BaseVectors) impact() float64 {
+	return 10.41 * (1 - (1-m.C.Score())*(1-m.I.Score())*(1-m.A.Score()))
+}
+
+func (m BaseVectors) Exploitability() float64 {
+	return round(m.exploitability())
+}
+
+func (m BaseVectors) exploitability() float64 {
+	return 20 * m.AV.Score() * m.AC.Score() * m.Au.Score()
 }
 
 func (m BaseVectors) IsValid() bool {
@@ -82,4 +106,11 @@ func round(val float64) float64 {
 	} else {
 		return math.Floor(digit) / 10
 	}
+}
+
+func iif(cond bool, t, f float64) float64 {
+	if cond {
+		return t
+	}
+	return f
 }
