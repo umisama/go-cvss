@@ -1,5 +1,5 @@
 # umisama/go-cvss[![Build Status](https://travis-ci.org/umisama/go-cvss.svg?branch=master)](https://travis-ci.org/umisama/go-cvss)
-A Common Vulnerability Scoring System 2.0 implementation for golang.
+A Common Vulnerability Scoring System 2.0 (CVSSv2) implementation for golang.
 
 ## status
 complete.
@@ -60,6 +60,9 @@ fmt.Printf(
         "base_score: %f  / temporal_score: %f / environment_score: %f\noverall %f\n\n",
         v.BaseScore(), v.TemporalScore(), v.EnvironmentalScore(), v.Score())
 ```
+
+## document
+ * [godoc.org](http://godoc.org/github.com/umisama/go-cvss)
 
 ## reference
  * [NVD - CVSS v2 Vector Definitions](http://nvd.nist.gov/CVSS/Vector-v2.aspx)

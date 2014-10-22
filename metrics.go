@@ -4,6 +4,7 @@ import (
 	"math"
 )
 
+// Metric reprecents all metric factors.
 type Metric interface {
 	isValid() bool
 	isDefined() bool
@@ -12,18 +13,49 @@ type Metric interface {
 	stringShort() string
 }
 
+// AccessVector reprecents access vector in base vectors.
+// implemements Metric interface.
 type AccessVector string
+
+// AccessComplexity reprecents access complexity in base vectors.
+// implemements Metric interface.
 type AccessComplexity string
+
+// AccessComplexity reprecents authentication in base vectors.
+// implemements Metric interface.
 type Authentication string
+
+// AccessComplexity reprecents (confidentiality|integrity|availability) impact in base vectors.
+// implemements Metric interface.
 type Impact string
+
+// Exploitability reprecents exploitability in temporal vectors.
+// implemements Metric interface.
 type Exploitability string
+
+// RemediationLevel reprecents remediation level in temporal vectors.
+// implemements Metric interface.
 type RemediationLevel string
+
+// ReportConfidence reprecents report confidence in temporal vectors.
+// implemements Metric interface.
 type ReportConfidence string
+
+// CollateralDamagePotential reprecents temporal damage potential in environmental vectors.
+// implemements Metric interface.
 type CollateralDamagePotential string
+
+// TargetDistribution reprecents target distribution in environmental vectors.
+// implemements Metric interface.
 type TargetDistribution string
+
+// Requirement reprecents (confidentiality|integrity|availability) requirement in environmental vectors.
+// implemements Metric interface.
 type Requirement string
 
 const (
+	// Define all metric factors.
+	// must use these, don't create yourself.
 	AccessVector_Local                   = AccessVector("L")
 	AccessVector_AdjacentNetwork         = AccessVector("A")
 	AccessVector_Network                 = AccessVector("N")

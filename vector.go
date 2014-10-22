@@ -1,3 +1,6 @@
+// Package cvss provides parsing and scoring with Common Vulunerability Scoring System version 2.0(CVSS v2).
+//
+// See https://github.com/umisama/go-cvss for examples. 
 package cvss
 
 import (
@@ -6,6 +9,7 @@ import (
 	"regexp"
 )
 
+// Vectors reprecents a CVSS vector.
 type Vectors struct {
 	AV  AccessVector
 	AC  AccessComplexity
@@ -23,6 +27,7 @@ type Vectors struct {
 	AR  Requirement
 }
 
+// ParseVectors create new Vectors object with str.  str must valid as CVSS base/temporal/environment vectors.
 func ParseVectors(str string) (Vectors, error) {
 	submatches := regexp.MustCompile(`\(AV:([LAN])\/AC:([HML])\/Au:([NSM])\/C:([NPC])\/I:([NPC])\/A:([NPC])(?:\/E:(ND|U|POC|F|H)\/RL:(ND|OF|T|W|U)\/RC:(ND|UC|UR|C)(?:\/CDP:(N|L|LM|MH|H|ND)\/TD:(N|L|M|H|ND)\/CR:(L|M|H|ND)\/IR:(L|M|H|ND)\/AR:(L|M|H|ND))?)?\)`).FindStringSubmatch(str)
 	if len(submatches) != 15 || submatches[0] != str {
@@ -45,19 +50,20 @@ func ParseVectors(str string) (Vectors, error) {
 		IR:  Requirement(submatches[13]),
 		AR:  Requirement(submatches[14]),
 	}
-	if !m.isValid() {
+	if !m.IsValid() {
 		return Vectors{}, fmt.Errorf("invalid vectors string: %s", str)
 	}
 
 	return m, nil
 }
 
+// BaseScore returns m's base score.
 func (m Vectors) BaseScore() float64 {
 	return m.baseScore(m.impact())
 }
 
 func (m Vectors) baseScore(impact float64) float64 {
-	if !m.isValid() {
+	if !m.IsValid() {
 		return math.NaN()
 	}
 
@@ -67,6 +73,7 @@ func (m Vectors) baseScore(impact float64) float64 {
 	return round(base_score)
 }
 
+// ImpactSubScore returns m's impact sub-score in base score.
 func (m Vectors) ImpactSubScore() float64 {
 	return round(m.impact())
 }
@@ -75,6 +82,7 @@ func (m Vectors) impact() float64 {
 	return 10.41 * (1 - (1-m.C.score())*(1-m.I.score())*(1-m.A.score()))
 }
 
+// ExploitabilitySubScore returns m's exploitability sub-score in base score.
 func (m Vectors) ExploitabilitySubScore() float64 {
 	return round(m.exploitability())
 }
@@ -83,6 +91,7 @@ func (m Vectors) exploitability() float64 {
 	return 20 * m.AV.score() * m.AC.score() * m.Au.score()
 }
 
+// TemporalScore returns m's temporal score.
 func (m Vectors) TemporalScore() float64 {
 	return m.temporalScore(m.baseScore(m.impact()))
 }
@@ -95,6 +104,7 @@ func (m Vectors) temporalScore(base float64) float64 {
 	return round(base * m.E.score() * m.RL.score() * m.RC.score())
 }
 
+// EnvironmentalScore returns m's environmental score.
 func (m Vectors) EnvironmentalScore() float64 {
 	return round(m.environmentalScore())
 }
@@ -110,6 +120,7 @@ func (m Vectors) environmentalScore() float64 {
 	return (atemporal + (10-atemporal)*m.CDP.score()) * m.TD.score()
 }
 
+// AdjustedImpactSubScore returns m's adjusted impact sub-score in environmental score.
 func (m Vectors) AdjustedImpactSubScore() float64 {
 	return round(m.adjustedImpactSubScore())
 }
@@ -126,6 +137,7 @@ func (m Vectors) adjustedImpactSubScore() float64 {
 	return score
 }
 
+// Score returns m's overall score.
 func (m Vectors) Score() float64 {
 	if !math.IsNaN(m.EnvironmentalScore()) {
 		return m.EnvironmentalScore()
@@ -139,23 +151,27 @@ func (m Vectors) Score() float64 {
 	return math.NaN()
 }
 
-func (m Vectors) isValid() bool {
+// IsValid returns true if Vectors is valid vector.
+func (m Vectors) IsValid() bool {
 	return m.A.isValid() && m.AC.isValid() && m.Au.isValid() && m.AV.isValid() &&
 		m.C.isValid() && m.I.isValid() && m.E.isValid() && m.RL.isValid() && m.RC.isValid() &&
 		m.CDP.isValid() && m.TD.isValid() && m.CR.isValid() && m.IR.isValid() && m.AR.isValid()
 }
 
+// IsValid returns true if Vectors has environmental vectors.
 func (m Vectors) HasEnvironmentalVectors() bool {
 	return m.CDP.isDefined() || m.TD.isDefined() || m.CR.isDefined() ||
 		m.IR.isDefined() || m.AR.isDefined()
 }
 
+// IsValid returns true if Vectors has temporal vectors.
 func (m Vectors) HasTemporalVectors() bool {
 	return m.HasEnvironmentalVectors() || m.E.isDefined() || m.RL.isDefined() || m.RC.isDefined()
 }
 
+// String returns formatted m.
 func (m Vectors) String() string {
-	if !m.isValid() {
+	if !m.IsValid() {
 		return ""
 	}
 
