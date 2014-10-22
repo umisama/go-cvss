@@ -1,4 +1,4 @@
-# umisama/go-cvss[![Build Status](https://travis-ci.org/umisama/cvss.svg?branch=master)](https://travis-ci.org/umisama/cvss)
+# umisama/go-cvss[![Build Status](https://travis-ci.org/umisama/go-cvss.svg?branch=master)](https://travis-ci.org/umisama/go-cvss)
 A Common Vulnerability Scoring System 2.0 implementation for golang.
 
 ## status
