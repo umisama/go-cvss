@@ -175,15 +175,15 @@ func (m Vectors) String() string {
 		return ""
 	}
 
-	base := "AV:" + m.AV.stringShort() + "/AC:" + m.AC.stringShort() + "/Au:" + m.Au.stringShort() +
-		"/C:" + m.C.stringShort() + "/I:" + m.I.stringShort() + "/A:" + m.A.stringShort()
+	base := "AV:" + m.AV.StringShort() + "/AC:" + m.AC.StringShort() + "/Au:" + m.Au.StringShort() +
+		"/C:" + m.C.StringShort() + "/I:" + m.I.StringShort() + "/A:" + m.A.StringShort()
 	temporary := ""
 	environment := ""
 	if m.HasTemporalVectors() {
-		temporary = "/E:" + m.E.stringShort() + "/RL:" + m.RL.stringShort() + "/RC:" + m.RC.stringShort()
+		temporary = "/E:" + m.E.StringShort() + "/RL:" + m.RL.StringShort() + "/RC:" + m.RC.StringShort()
 	}
 	if m.HasEnvironmentalVectors() {
-		environment = "/CDP:" + m.CDP.stringShort() + "/TD:" + m.TD.stringShort() + "/CR:" + m.CR.stringShort() + "/IR:" + m.IR.stringShort() + "/AR:" + m.AR.stringShort()
+		environment = "/CDP:" + m.CDP.StringShort() + "/TD:" + m.TD.StringShort() + "/CR:" + m.CR.StringShort() + "/IR:" + m.IR.StringShort() + "/AR:" + m.AR.StringShort()
 	}
 
 	return "(" + base + temporary + environment + ")"

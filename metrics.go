@@ -9,8 +9,8 @@ type Metric interface {
 	isValid() bool
 	isDefined() bool
 	score() float64
-	string() string
-	stringShort() string
+	String() string
+	StringShort() string
 }
 
 // AccessVector reprecents access vector in base vectors.
@@ -122,7 +122,7 @@ func (m AccessVector) score() float64 {
 	return math.NaN()
 }
 
-func (m AccessVector) string() string {
+func (m AccessVector) String() string {
 	switch m {
 	case AccessVector_Local:
 		return "Local"
@@ -135,7 +135,7 @@ func (m AccessVector) string() string {
 	return ""
 }
 
-func (m AccessVector) stringShort() string {
+func (m AccessVector) StringShort() string {
 	switch m {
 	case AccessVector_Local, AccessVector_AdjacentNetwork, AccessVector_Network:
 		return string(m)
@@ -167,7 +167,7 @@ func (m AccessComplexity) score() float64 {
 	return math.NaN()
 }
 
-func (m AccessComplexity) string() string {
+func (m AccessComplexity) String() string {
 	switch m {
 	case AccessComplexity_High:
 		return "High"
@@ -180,7 +180,7 @@ func (m AccessComplexity) string() string {
 	return ""
 }
 
-func (m AccessComplexity) stringShort() string {
+func (m AccessComplexity) StringShort() string {
 	switch m {
 	case AccessComplexity_High, AccessComplexity_Medium, AccessComplexity_Low:
 		return string(m)
@@ -212,7 +212,7 @@ func (m Authentication) score() float64 {
 	return math.NaN()
 }
 
-func (m Authentication) string() string {
+func (m Authentication) String() string {
 	switch m {
 	case Authentication_Multiple:
 		return "Multiple"
@@ -225,7 +225,7 @@ func (m Authentication) string() string {
 	return ""
 }
 
-func (m Authentication) stringShort() string {
+func (m Authentication) StringShort() string {
 	switch m {
 	case Authentication_Multiple, Authentication_Single, Authentication_None:
 		return string(m)
@@ -257,7 +257,7 @@ func (m Impact) score() float64 {
 	return math.NaN()
 }
 
-func (m Impact) string() string {
+func (m Impact) String() string {
 	switch m {
 	case Impact_Complete:
 		return "Complete"
@@ -270,7 +270,7 @@ func (m Impact) string() string {
 	return ""
 }
 
-func (m Impact) stringShort() string {
+func (m Impact) StringShort() string {
 	switch m {
 	case Impact_Complete, Impact_Partial, Impact_None:
 		return string(m)
@@ -311,7 +311,7 @@ func (m Exploitability) score() float64 {
 	return math.NaN()
 }
 
-func (m Exploitability) string() string {
+func (m Exploitability) String() string {
 	switch m {
 	case Exploitability_Unproven:
 		return "Unproven"
@@ -328,7 +328,7 @@ func (m Exploitability) string() string {
 	return ""
 }
 
-func (m Exploitability) stringShort() string {
+func (m Exploitability) StringShort() string {
 	switch m {
 	case Exploitability_Unproven, Exploitability_ProofOfConcept, Exploitability_Functional, Exploitability_High, Exploitability_NotDefined:
 		return string(m)
@@ -371,7 +371,7 @@ func (m RemediationLevel) score() float64 {
 	return math.NaN()
 }
 
-func (m RemediationLevel) string() string {
+func (m RemediationLevel) String() string {
 	switch m {
 	case RemediationLevel_OfficialFix:
 		return "Official-fix"
@@ -388,7 +388,7 @@ func (m RemediationLevel) string() string {
 	return ""
 }
 
-func (m RemediationLevel) stringShort() string {
+func (m RemediationLevel) StringShort() string {
 	switch m {
 	case RemediationLevel_OfficialFix, RemediationLevel_TemporaryFix, RemediationLevel_Workaround, RemediationLevel_Unavailable, RemediationLevel_NotDefined:
 		return string(m)
@@ -428,7 +428,7 @@ func (m ReportConfidence) score() float64 {
 	return math.NaN()
 }
 
-func (m ReportConfidence) string() string {
+func (m ReportConfidence) String() string {
 	switch m {
 	case ReportConfidence_Unconfirmed:
 		return "Unconfirmed"
@@ -443,7 +443,7 @@ func (m ReportConfidence) string() string {
 	return ""
 }
 
-func (m ReportConfidence) stringShort() string {
+func (m ReportConfidence) StringShort() string {
 	switch m {
 	case ReportConfidence_Confirmed, ReportConfidence_Unconfirmed, ReportConfidence_Uncorroborated, ReportConfidence_NotDefined:
 		return string(m)
@@ -490,7 +490,7 @@ func (m CollateralDamagePotential) score() float64 {
 	return math.NaN()
 }
 
-func (m CollateralDamagePotential) string() string {
+func (m CollateralDamagePotential) String() string {
 	switch m {
 	case CollateralDamagePotential_None:
 		return "None"
@@ -509,7 +509,7 @@ func (m CollateralDamagePotential) string() string {
 	return ""
 }
 
-func (m CollateralDamagePotential) stringShort() string {
+func (m CollateralDamagePotential) StringShort() string {
 	switch m {
 	case CollateralDamagePotential_Low, CollateralDamagePotential_LowMedium, CollateralDamagePotential_MediumHigh, CollateralDamagePotential_High, CollateralDamagePotential_None, CollateralDamagePotential_NotDefined:
 		return string(m)
@@ -552,7 +552,7 @@ func (m TargetDistribution) score() float64 {
 	return math.NaN()
 }
 
-func (m TargetDistribution) string() string {
+func (m TargetDistribution) String() string {
 	switch m {
 	case TargetDistribution_None:
 		return "None"
@@ -569,7 +569,7 @@ func (m TargetDistribution) string() string {
 	return ""
 }
 
-func (m TargetDistribution) stringShort() string {
+func (m TargetDistribution) StringShort() string {
 	switch m {
 	case TargetDistribution_Low, TargetDistribution_Medium, TargetDistribution_High, TargetDistribution_None, TargetDistribution_NotDefined:
 		return string(m)
@@ -609,7 +609,7 @@ func (m Requirement) score() float64 {
 	return math.NaN()
 }
 
-func (m Requirement) string() string {
+func (m Requirement) String() string {
 	switch m {
 	case Requirement_Low:
 		return "Low"
@@ -624,7 +624,7 @@ func (m Requirement) string() string {
 	return ""
 }
 
-func (m Requirement) stringShort() string {
+func (m Requirement) StringShort() string {
 	switch m {
 	case Requirement_Low, Requirement_Medium, Requirement_High, Requirement_NotDefined:
 		return string(m)
