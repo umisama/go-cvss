@@ -153,9 +153,9 @@ func (m Vectors) Score() float64 {
 
 // IsValid returns true if Vectors is valid vector.
 func (m Vectors) IsValid() bool {
-	return m.A.isValid() && m.AC.isValid() && m.Au.isValid() && m.AV.isValid() &&
-		m.C.isValid() && m.I.isValid() && m.E.isValid() && m.RL.isValid() && m.RC.isValid() &&
-		m.CDP.isValid() && m.TD.isValid() && m.CR.isValid() && m.IR.isValid() && m.AR.isValid()
+	return m.A.IsValid() && m.AC.IsValid() && m.Au.IsValid() && m.AV.IsValid() &&
+		m.C.IsValid() && m.I.IsValid() && m.E.IsValid() && m.RL.IsValid() && m.RC.IsValid() &&
+		m.CDP.IsValid() && m.TD.IsValid() && m.CR.IsValid() && m.IR.IsValid() && m.AR.IsValid()
 }
 
 // IsValid returns true if Vectors has environmental vectors.

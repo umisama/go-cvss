@@ -24,7 +24,7 @@ func TestAccessVector(t *testing.T) {
 	}
 
 	for i, c := range cases {
-		assert.Equal(t, c.trg.isValid(), c.valid, "fail on %d", i)
+		assert.Equal(t, c.trg.IsValid(), c.valid, "fail on %d", i)
 		assert.Equal(t, c.trg.isDefined(), c.defined, "fail on %d", i)
 		assert.Equal(t, c.trg.score(), c.score, "fail on %d", i)
 		assert.Equal(t, c.trg.String(), c.str, "fail on %d", i)
@@ -50,7 +50,7 @@ func TestAccessComplexity(t *testing.T) {
 	}
 
 	for i, c := range cases {
-		assert.Equal(t, c.trg.isValid(), c.valid, "fail on %d", i)
+		assert.Equal(t, c.trg.IsValid(), c.valid, "fail on %d", i)
 		assert.Equal(t, c.trg.isDefined(), c.defined, "fail on %d", i)
 		assert.Equal(t, c.trg.score(), c.score, "fail on %d", i)
 		assert.Equal(t, c.trg.String(), c.str, "fail on %d", i)
@@ -76,7 +76,7 @@ func TestAuthentication(t *testing.T) {
 	}
 
 	for i, c := range cases {
-		assert.Equal(t, c.trg.isValid(), c.valid, "fail on %d", i)
+		assert.Equal(t, c.trg.IsValid(), c.valid, "fail on %d", i)
 		assert.Equal(t, c.trg.isDefined(), c.defined, "fail on %d", i)
 		assert.Equal(t, c.trg.score(), c.score, "fail on %d", i)
 		assert.Equal(t, c.trg.String(), c.str, "fail on %d", i)
@@ -102,7 +102,7 @@ func TestConfidentiality(t *testing.T) {
 	}
 
 	for i, c := range cases {
-		assert.Equal(t, c.trg.isValid(), c.valid, "fail on %d", i)
+		assert.Equal(t, c.trg.IsValid(), c.valid, "fail on %d", i)
 		assert.Equal(t, c.trg.isDefined(), c.defined, "fail on %d", i)
 		assert.Equal(t, c.trg.score(), c.score, "fail on %d", i)
 		assert.Equal(t, c.trg.String(), c.str, "fail on %d", i)
@@ -130,7 +130,7 @@ func TestExploitability(t *testing.T) {
 	}
 
 	for i, c := range cases {
-		assert.Equal(t, c.trg.isValid(), c.valid, "fail on %d", i)
+		assert.Equal(t, c.trg.IsValid(), c.valid, "fail on %d", i)
 		assert.Equal(t, c.trg.isDefined(), c.defined, "fail on %d", i)
 		assert.Equal(t, c.trg.score(), c.score, "fail on %d", i)
 		assert.Equal(t, c.trg.String(), c.str, "fail on %d", i)
@@ -158,7 +158,7 @@ func TestRemediationLevel(t *testing.T) {
 	}
 
 	for i, c := range cases {
-		assert.Equal(t, c.trg.isValid(), c.valid, "fail on %d", i)
+		assert.Equal(t, c.trg.IsValid(), c.valid, "fail on %d", i)
 		assert.Equal(t, c.trg.isDefined(), c.defined, "fail on %d", i)
 		assert.Equal(t, c.trg.score(), c.score, "fail on %d", i)
 		assert.Equal(t, c.trg.String(), c.str, "fail on %d", i)
@@ -185,7 +185,7 @@ func TestReportConfidence(t *testing.T) {
 	}
 
 	for i, c := range cases {
-		assert.Equal(t, c.trg.isValid(), c.valid, "fail on %d", i)
+		assert.Equal(t, c.trg.IsValid(), c.valid, "fail on %d", i)
 		assert.Equal(t, c.trg.isDefined(), c.defined, "fail on %d", i)
 		assert.Equal(t, c.trg.score(), c.score, "fail on %d", i)
 		assert.Equal(t, c.trg.String(), c.str, "fail on %d", i)
@@ -214,7 +214,7 @@ func TestCollateralDamagePotential(t *testing.T) {
 	}
 
 	for i, c := range cases {
-		assert.Equal(t, c.trg.isValid(), c.valid, "fail on %d", i)
+		assert.Equal(t, c.trg.IsValid(), c.valid, "fail on %d", i)
 		assert.Equal(t, c.trg.isDefined(), c.defined, "fail on %d", i)
 		assert.Equal(t, c.trg.score(), c.score, "fail on %d", i)
 		assert.Equal(t, c.trg.String(), c.str, "fail on %d", i)
@@ -242,7 +242,7 @@ func TestTargetDistribution(t *testing.T) {
 	}
 
 	for i, c := range cases {
-		assert.Equal(t, c.trg.isValid(), c.valid, "fail on %d", i)
+		assert.Equal(t, c.trg.IsValid(), c.valid, "fail on %d", i)
 		assert.Equal(t, c.trg.isDefined(), c.defined, "fail on %d", i)
 		assert.Equal(t, c.trg.score(), c.score, "fail on %d", i)
 		assert.Equal(t, c.trg.String(), c.str, "fail on %d", i)
@@ -269,7 +269,7 @@ func TestRequirement(t *testing.T) {
 	}
 
 	for i, c := range cases {
-		assert.Equal(t, c.trg.isValid(), c.valid, "fail on %d", i)
+		assert.Equal(t, c.trg.IsValid(), c.valid, "fail on %d", i)
 		assert.Equal(t, c.trg.isDefined(), c.defined, "fail on %d", i)
 		assert.Equal(t, c.trg.score(), c.score, "fail on %d", i)
 		assert.Equal(t, c.trg.String(), c.str, "fail on %d", i)

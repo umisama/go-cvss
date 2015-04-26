@@ -6,7 +6,7 @@ import (
 
 // Metric reprecents all metric factors.
 type Metric interface {
-	isValid() bool
+	IsValid() bool
 	isDefined() bool
 	score() float64
 	String() string
@@ -99,14 +99,14 @@ const (
 	Requirement_NotDefined               = Requirement("ND")
 )
 
-func (m AccessVector) isValid() bool {
+func (m AccessVector) IsValid() bool {
 	return m == AccessVector_Local ||
 		m == AccessVector_AdjacentNetwork ||
 		m == AccessVector_Network
 }
 
 func (m AccessVector) isDefined() bool {
-	return m.isValid()
+	return m.IsValid()
 }
 
 func (m AccessVector) score() float64 {
@@ -144,14 +144,14 @@ func (m AccessVector) StringShort() string {
 	return ""
 }
 
-func (m AccessComplexity) isValid() bool {
+func (m AccessComplexity) IsValid() bool {
 	return m == AccessComplexity_High ||
 		m == AccessComplexity_Medium ||
 		m == AccessComplexity_Low
 }
 
 func (m AccessComplexity) isDefined() bool {
-	return m.isValid()
+	return m.IsValid()
 }
 
 func (m AccessComplexity) score() float64 {
@@ -189,14 +189,14 @@ func (m AccessComplexity) StringShort() string {
 	return ""
 }
 
-func (m Authentication) isValid() bool {
+func (m Authentication) IsValid() bool {
 	return m == Authentication_Multiple ||
 		m == Authentication_Single ||
 		m == Authentication_None
 }
 
 func (m Authentication) isDefined() bool {
-	return m.isValid()
+	return m.IsValid()
 }
 
 func (m Authentication) score() float64 {
@@ -234,14 +234,14 @@ func (m Authentication) StringShort() string {
 	return ""
 }
 
-func (m Impact) isValid() bool {
+func (m Impact) IsValid() bool {
 	return m == Impact_Complete ||
 		m == Impact_Partial ||
 		m == Impact_None
 }
 
 func (m Impact) isDefined() bool {
-	return m.isValid()
+	return m.IsValid()
 }
 
 func (m Impact) score() float64 {
@@ -279,7 +279,7 @@ func (m Impact) StringShort() string {
 	return ""
 }
 
-func (m Exploitability) isValid() bool {
+func (m Exploitability) IsValid() bool {
 	return m == Exploitability_Unproven ||
 		m == Exploitability_ProofOfConcept ||
 		m == Exploitability_Functional ||
@@ -289,7 +289,7 @@ func (m Exploitability) isValid() bool {
 }
 
 func (m Exploitability) isDefined() bool {
-	return m.isValid() &&
+	return m.IsValid() &&
 		m != Exploitability_NotDefined &&
 		m != Exploitability("")
 }
@@ -339,7 +339,7 @@ func (m Exploitability) StringShort() string {
 	return ""
 }
 
-func (m RemediationLevel) isValid() bool {
+func (m RemediationLevel) IsValid() bool {
 	return m == RemediationLevel_OfficialFix ||
 		m == RemediationLevel_TemporaryFix ||
 		m == RemediationLevel_Workaround ||
@@ -349,7 +349,7 @@ func (m RemediationLevel) isValid() bool {
 }
 
 func (m RemediationLevel) isDefined() bool {
-	return m.isValid() &&
+	return m.IsValid() &&
 		m != RemediationLevel_NotDefined &&
 		m != RemediationLevel("")
 }
@@ -399,7 +399,7 @@ func (m RemediationLevel) StringShort() string {
 	return ""
 }
 
-func (m ReportConfidence) isValid() bool {
+func (m ReportConfidence) IsValid() bool {
 	return m == ReportConfidence_Unconfirmed ||
 		m == ReportConfidence_Uncorroborated ||
 		m == ReportConfidence_Confirmed ||
@@ -408,7 +408,7 @@ func (m ReportConfidence) isValid() bool {
 }
 
 func (m ReportConfidence) isDefined() bool {
-	return m.isValid() &&
+	return m.IsValid() &&
 		m != ReportConfidence_NotDefined &&
 		m != ReportConfidence("")
 }
@@ -454,7 +454,7 @@ func (m ReportConfidence) StringShort() string {
 	return ""
 }
 
-func (m CollateralDamagePotential) isValid() bool {
+func (m CollateralDamagePotential) IsValid() bool {
 	return m == CollateralDamagePotential_None ||
 		m == CollateralDamagePotential_Low ||
 		m == CollateralDamagePotential_LowMedium ||
@@ -466,7 +466,7 @@ func (m CollateralDamagePotential) isValid() bool {
 }
 
 func (m CollateralDamagePotential) isDefined() bool {
-	return m.isValid() &&
+	return m.IsValid() &&
 		m != CollateralDamagePotential_NotDefined &&
 		m != CollateralDamagePotential("")
 }
@@ -520,7 +520,7 @@ func (m CollateralDamagePotential) StringShort() string {
 	return ""
 }
 
-func (m TargetDistribution) isValid() bool {
+func (m TargetDistribution) IsValid() bool {
 	return m == TargetDistribution_None ||
 		m == TargetDistribution_Low ||
 		m == TargetDistribution_Medium ||
@@ -530,7 +530,7 @@ func (m TargetDistribution) isValid() bool {
 }
 
 func (m TargetDistribution) isDefined() bool {
-	return m.isValid() &&
+	return m.IsValid() &&
 		m != TargetDistribution_NotDefined &&
 		m != TargetDistribution("")
 }
@@ -580,7 +580,7 @@ func (m TargetDistribution) StringShort() string {
 	return ""
 }
 
-func (m Requirement) isValid() bool {
+func (m Requirement) IsValid() bool {
 	return m == Requirement_Low ||
 		m == Requirement_Medium ||
 		m == Requirement_High ||
@@ -589,7 +589,7 @@ func (m Requirement) isValid() bool {
 }
 
 func (m Requirement) isDefined() bool {
-	return m.isValid() &&
+	return m.IsValid() &&
 		m != Requirement_NotDefined &&
 		m != Requirement("")
 }
