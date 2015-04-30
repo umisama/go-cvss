@@ -1,7 +1,6 @@
 package cvss
 
 import (
-	"github.com/stretchr/testify/assert"
 	"math"
 	"testing"
 )
@@ -91,11 +90,16 @@ func TestParseVectors(t *testing.T) {
 	for i, c := range cases {
 		m, err := ParseVectors(c.input)
 		if c.iserror {
-			assert.Error(t, err, "%d", i)
-			continue
+			if err == nil {
+				t.Errorf("fail on %d", i)
+			}
 		} else {
-			assert.Nil(t, err, "%d", i)
-			assert.Equal(t, c.output, m, "%d", i)
+			if err != nil {
+				t.Errorf("fail on %d", i)
+			}
+			if c.output != m {
+				t.Errorf("fail on %d", i)
+			}
 		}
 	}
 
@@ -144,7 +148,9 @@ func TestVectorsString(t *testing.T) {
 	}
 
 	for i, c := range cases {
-		assert.Equal(t, c.expect, c.input.String(), "%d", i)
+		if c.expect != c.input.String() {
+			t.Errorf("fail on %d", i)
+		}
 	}
 }
 
@@ -255,9 +261,21 @@ func TestVectorsScore(t *testing.T) {
 	}
 
 	for i, c := range cases {
-		assert.Equal(t, c.base_score, c.trg.BaseScore(), "fail on %d", i)
-		assert.Equal(t, c.tmp_score, c.trg.TemporalScore(), "fail on %d", i)
-		assert.Equal(t, c.env_score, c.trg.EnvironmentalScore(), "fail on %d", i)
-		assert.Equal(t, c.score, c.trg.Score(), "fail on %d", i)
+		if c.base_score != c.trg.BaseScore() &&
+			!(math.IsNaN(c.base_score) && math.IsNaN(c.trg.BaseScore())) {
+			t.Errorf("fail on %d", i)
+		}
+		if c.tmp_score != c.trg.TemporalScore() &&
+			!(math.IsNaN(c.tmp_score) && math.IsNaN(c.trg.TemporalScore())) {
+			t.Errorf("fail on %d", i)
+		}
+		if c.env_score != c.trg.EnvironmentalScore() &&
+			!(math.IsNaN(c.env_score) && math.IsNaN(c.trg.EnvironmentalScore())) {
+			t.Errorf("fail on %d", i)
+		}
+		if c.score != c.trg.Score() &&
+			!(math.IsNaN(c.score) && math.IsNaN(c.trg.Score())) {
+			t.Errorf("fail on %d", i)
+		}
 	}
 }
