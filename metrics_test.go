@@ -5,163 +5,92 @@ import (
 	"testing"
 )
 
-func TestAccessVector(t *testing.T) {
-	type testcase struct {
-		trg     AccessVector
-		valid   bool
-		defined bool
-		score   float64
-		str     string
-		short   string
-	}
+type testcase struct {
+	trg     Metric
+	valid   bool
+	defined bool
+	score   float64
+	str     string
+	short   string
+}
 
+func (c *testcase) Do(t *testing.T) bool {
+	if c.trg.IsValid() != c.valid {
+		return true
+	}
+	if c.trg.isDefined() != c.defined {
+		return true
+	}
+	if c.trg.score() != c.score &&
+		!(math.IsNaN(c.trg.score()) && math.IsNaN(c.score)) {
+		return true
+	}
+	if c.trg.String() != c.str {
+		return true
+	}
+	if c.trg.StringShort() != c.short {
+		return true
+	}
+	return false
+}
+
+func TestAccessVector(t *testing.T) {
 	var cases = []testcase{
 		{AccessVector_Local, true, true, 0.395, "Local", "L"},
 		{AccessVector_AdjacentNetwork, true, true, 0.646, "Adjacent Network", "A"},
 		{AccessVector_Network, true, true, 1.0, "Network", "N"},
 		{AccessVector("test"), false, false, math.NaN(), "", ""},
 	}
-
 	for i, c := range cases {
-		if c.trg.IsValid() != c.valid {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.isDefined() != c.defined {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.score() != c.score &&
-			!(math.IsNaN(c.trg.score()) && math.IsNaN(c.score)) {
-			t.Errorf("fail on %d", i, c.trg.score(), c.score)
-		}
-		if c.trg.String() != c.str {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.StringShort() != c.short {
-			t.Errorf("fail on %d", i)
+		if c.Do(t) {
+			t.Log("fail on %d", i)
 		}
 	}
 }
 
 func TestAccessComplexity(t *testing.T) {
-	type testcase struct {
-		trg     AccessComplexity
-		valid   bool
-		defined bool
-		score   float64
-		str     string
-		short   string
-	}
-
 	var cases = []testcase{
 		{AccessComplexity_High, true, true, 0.35, "High", "H"},
 		{AccessComplexity_Medium, true, true, 0.61, "Medium", "M"},
 		{AccessComplexity_Low, true, true, 0.71, "Low", "L"},
 		{AccessComplexity("test"), false, false, math.NaN(), "", ""},
 	}
-
 	for i, c := range cases {
-		if c.trg.IsValid() != c.valid {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.isDefined() != c.defined {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.score() != c.score &&
-			!(math.IsNaN(c.trg.score()) && math.IsNaN(c.score)) {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.String() != c.str {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.StringShort() != c.short {
-			t.Errorf("fail on %d", i)
+		if c.Do(t) {
+			t.Log("fail on %d", i)
 		}
 	}
 }
 
 func TestAuthentication(t *testing.T) {
-	type testcase struct {
-		trg     Authentication
-		valid   bool
-		defined bool
-		score   float64
-		str     string
-		short   string
-	}
-
 	var cases = []testcase{
 		{Authentication_Multiple, true, true, 0.45, "Multiple", "M"},
 		{Authentication_Single, true, true, 0.56, "Single", "S"},
 		{Authentication_None, true, true, 0.704, "None", "N"},
 		{Authentication("test"), false, false, math.NaN(), "", ""},
 	}
-
 	for i, c := range cases {
-		if c.trg.IsValid() != c.valid {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.isDefined() != c.defined {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.score() != c.score &&
-			!(math.IsNaN(c.trg.score()) && math.IsNaN(c.score)) {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.String() != c.str {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.StringShort() != c.short {
-			t.Errorf("fail on %d", i)
+		if c.Do(t) {
+			t.Log("fail on %d", i)
 		}
 	}
 }
 
 func TestConfidentiality(t *testing.T) {
-	type testcase struct {
-		trg     Impact
-		valid   bool
-		defined bool
-		score   float64
-		str     string
-		short   string
-	}
-
 	var cases = []testcase{
 		{Impact_Complete, true, true, 0.660, "Complete", "C"},
 		{Impact_Partial, true, true, 0.275, "Partial", "P"},
 		{Impact_None, true, true, 0.0, "None", "N"},
 		{Impact("test"), false, false, math.NaN(), "", ""},
 	}
-
 	for i, c := range cases {
-		if c.trg.IsValid() != c.valid {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.isDefined() != c.defined {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.score() != c.score &&
-			!(math.IsNaN(c.trg.score()) && math.IsNaN(c.score)) {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.String() != c.str {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.StringShort() != c.short {
+		if c.Do(t) {
 			t.Errorf("fail on %d", i)
 		}
 	}
 }
 
 func TestExploitability(t *testing.T) {
-	type testcase struct {
-		trg     Exploitability
-		valid   bool
-		defined bool
-		score   float64
-		str     string
-		short   string
-	}
 	var cases = []testcase{
 		{Exploitability_Unproven, true, true, 0.85, "Unproven", "U"},
 		{Exploitability_ProofOfConcept, true, true, 0.90, "Proof-of-concept", "POC"},
@@ -171,36 +100,14 @@ func TestExploitability(t *testing.T) {
 		{Exploitability(""), true, false, 1.00, "Not Defined", "ND"},
 		{Exploitability("test"), false, false, math.NaN(), "", ""},
 	}
-
 	for i, c := range cases {
-		if c.trg.IsValid() != c.valid {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.isDefined() != c.defined {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.score() != c.score &&
-			!(math.IsNaN(c.trg.score()) && math.IsNaN(c.score)) {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.String() != c.str {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.StringShort() != c.short {
+		if c.Do(t) {
 			t.Errorf("fail on %d", i)
 		}
 	}
 }
 
 func TestRemediationLevel(t *testing.T) {
-	type testcase struct {
-		trg     RemediationLevel
-		valid   bool
-		defined bool
-		score   float64
-		str     string
-		short   string
-	}
 	var cases = []testcase{
 		{RemediationLevel_OfficialFix, true, true, 0.87, "Official-fix", "OF"},
 		{RemediationLevel_TemporaryFix, true, true, 0.90, "Temporary-fix", "T"},
@@ -210,36 +117,14 @@ func TestRemediationLevel(t *testing.T) {
 		{RemediationLevel(""), true, false, 1.00, "Not Defined", "ND"},
 		{RemediationLevel("test"), false, false, math.NaN(), "", ""},
 	}
-
 	for i, c := range cases {
-		if c.trg.IsValid() != c.valid {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.isDefined() != c.defined {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.score() != c.score &&
-			!(math.IsNaN(c.trg.score()) && math.IsNaN(c.score)) {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.String() != c.str {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.StringShort() != c.short {
+		if c.Do(t) {
 			t.Errorf("fail on %d", i)
 		}
 	}
 }
 
 func TestReportConfidence(t *testing.T) {
-	type testcase struct {
-		trg     ReportConfidence
-		valid   bool
-		defined bool
-		score   float64
-		str     string
-		short   string
-	}
 	var cases = []testcase{
 		{ReportConfidence_Unconfirmed, true, true, 0.90, "Unconfirmed", "UC"},
 		{ReportConfidence_Uncorroborated, true, true, 0.95, "Uncorroborated", "UR"},
@@ -248,36 +133,14 @@ func TestReportConfidence(t *testing.T) {
 		{ReportConfidence(""), true, false, 1.00, "Not Defined", "ND"},
 		{ReportConfidence("test"), false, false, math.NaN(), "", ""},
 	}
-
 	for i, c := range cases {
-		if c.trg.IsValid() != c.valid {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.isDefined() != c.defined {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.score() != c.score &&
-			!(math.IsNaN(c.trg.score()) && math.IsNaN(c.score)) {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.String() != c.str {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.StringShort() != c.short {
+		if c.Do(t) {
 			t.Errorf("fail on %d", i)
 		}
 	}
 }
 
 func TestCollateralDamagePotential(t *testing.T) {
-	type testcase struct {
-		trg     CollateralDamagePotential
-		valid   bool
-		defined bool
-		score   float64
-		str     string
-		short   string
-	}
 	var cases = []testcase{
 		{CollateralDamagePotential_None, true, true, 0.00, "None", "N"},
 		{CollateralDamagePotential_Low, true, true, 0.10, "Low", "L"},
@@ -288,36 +151,14 @@ func TestCollateralDamagePotential(t *testing.T) {
 		{CollateralDamagePotential(""), true, false, 0.00, "Not Defined", "ND"},
 		{CollateralDamagePotential("test"), false, false, math.NaN(), "", ""},
 	}
-
 	for i, c := range cases {
-		if c.trg.IsValid() != c.valid {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.isDefined() != c.defined {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.score() != c.score &&
-			!(math.IsNaN(c.trg.score()) && math.IsNaN(c.score)) {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.String() != c.str {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.StringShort() != c.short {
+		if c.Do(t) {
 			t.Errorf("fail on %d", i)
 		}
 	}
 }
 
 func TestTargetDistribution(t *testing.T) {
-	type testcase struct {
-		trg     TargetDistribution
-		valid   bool
-		defined bool
-		score   float64
-		str     string
-		short   string
-	}
 	var cases = []testcase{
 		{TargetDistribution_None, true, true, 0.00, "None", "N"},
 		{TargetDistribution_Low, true, true, 0.25, "Low", "L"},
@@ -327,36 +168,14 @@ func TestTargetDistribution(t *testing.T) {
 		{TargetDistribution(""), true, false, 1.00, "Not Defined", "ND"},
 		{TargetDistribution("test"), false, false, math.NaN(), "", ""},
 	}
-
 	for i, c := range cases {
-		if c.trg.IsValid() != c.valid {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.isDefined() != c.defined {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.score() != c.score &&
-			!(math.IsNaN(c.trg.score()) && math.IsNaN(c.score)) {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.String() != c.str {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.StringShort() != c.short {
+		if c.Do(t) {
 			t.Errorf("fail on %d", i)
 		}
 	}
 }
 
 func TestRequirement(t *testing.T) {
-	type testcase struct {
-		trg     Requirement
-		valid   bool
-		defined bool
-		score   float64
-		str     string
-		short   string
-	}
 	var cases = []testcase{
 		{Requirement_Low, true, true, 0.5, "Low", "L"},
 		{Requirement_Medium, true, true, 1.0, "Medium", "M"},
@@ -365,22 +184,8 @@ func TestRequirement(t *testing.T) {
 		{Requirement(""), true, false, 1.00, "Not Defined", "ND"},
 		{Requirement("test"), false, false, math.NaN(), "", ""},
 	}
-
 	for i, c := range cases {
-		if c.trg.IsValid() != c.valid {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.isDefined() != c.defined {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.score() != c.score &&
-			!(math.IsNaN(c.trg.score()) && math.IsNaN(c.score)) {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.String() != c.str {
-			t.Errorf("fail on %d", i)
-		}
-		if c.trg.StringShort() != c.short {
+		if c.Do(t) {
 			t.Errorf("fail on %d", i)
 		}
 	}
